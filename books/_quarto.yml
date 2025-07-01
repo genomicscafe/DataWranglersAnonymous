@@ -42,7 +42,6 @@ book:
     - part: "Curio"
       chapters:
         - CurioSeeker/running-seeker-HPC.qmd
-        - CurioSeeker/seeker3_0_0_installnotes.qmd
     - part: "R and RStudio"
       chapters:
         - R_RStudio/R-package-installation.qmd
