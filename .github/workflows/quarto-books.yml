@@ -1,0 +1,30 @@
+name: Publish a collection of tutorials to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'books/**'
+      - '.github/workflows/quarto-books.yml'
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render Quarto Book
+        run: |
+          cd books
+          quarto render
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: books/_book
