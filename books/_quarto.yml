@@ -39,7 +39,6 @@ book:
     - part: "Nextflow"
       chapters:
         - Nextflow/running-Nextflow-HPC.qmd
-        - Nextflow/nextflow-installnotes.qmd
     - part: "Curio"
       chapters:
         - CurioSeeker/running-seeker-HPC.qmd
