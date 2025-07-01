@@ -1,0 +1,147 @@
+---
+title: "How to Run BCL-Convert on HPC"
+author: "Javier Carpinteyro Ponce"
+format: html
+editor: visual
+code-annotations: hover
+date: 11/04/2024
+editor_options: 
+  chunk_output_type: console
+toc: true
+self-contained: true
+---
+
+A short tutorial that shows how to get started with BCL Convert version `4.2.7`. The examples below show how to run `bcl-convert` for demultiplexing Illumina's BCL raw data. This tutorial assumes that BCL Convert is installed in your system and it is fully functional.
+
+## Make BCL-convert `samplesheet-v2.csv` for standard bulk DNA/RNA-seq
+
+For standard sequencing runs, like bulk RNA sequencing:
+
+1.  **Create the sample sheet file required by BCL-convert.**
+
+    -   Populate the file with the corresponding sample information. The final sample sheet should look like this:
+
+        ``` texinfo
+        [Header]
+        FileFormatVersion,2
+        FlowCellType,P2
+        [BCLConvert_Settings]
+        CreateFastqForIndexReads,0
+        BarcodeMismatchesIndex1,1
+        [BCLConvert_Data]
+        Sample_ID,index,index2,Sample_Project,Sample_Name
+        sample1_ID,ATCACGTT,,Project_1,sample1
+        sample2_ID,CGATGTTT,,Project_2,sample2
+        ```
+
+    -   `BarcodeMismatchesIndex2,1` should be added to the `[BCLConvert_Settings]` section when using double indexing. Add `index2` barcode sequence.
+
+## Make BCL-convert `samplesheet-v2.csv` for 10X Genomics single-cell RNA-seq
+
+1.  **Populate the sample sheet with the sample information. Main spread sheet might contain the index names but you can look for the sequences here:** <https://cdn.10xgenomics.com/raw/upload/v1655151897/support/in-line%20documents/Dual_Index_Kit_TT_Set_A.csv>
+
+    -   **Note that `index` and `index2` columns should contain the actual sequences.**
+
+2.  **The final sample sheet should look like this:**
+
+    ``` texinfo
+    [Header]
+    FileFormatVersion,2
+    FlowCellType,P2
+    [BCLConvert_Settings]
+    CreateFastqForIndexReads,0
+    BarcodeMismatchesIndex1,1
+    BarcodeMismatchesIndex2,1
+    [BCLConvert_Data]
+    Sample_ID,index,index2,Sample_Project,Sample_Name
+    sample1_ID,TATCAGCCTA,GTTTCGTCCT,Project_1,sample1
+    sample2_ID,GCCCGATGGA,AATCGTCTAG,Project_1,sample2
+    ```
+
+3.  **Note that `Sample_Project` remains the same given that both samples come from the same sequencing run.**
+
+## Run BCL-convert
+
+Assuming BCL Convert is properly installed in your HPC system, you can follow the following workflow:
+
+1.  **Create a bash script, i.e. `doDemux_bclconvert.sh`:**
+
+    ``` {#runbclconvert .bash}
+    #!/bin/bash
+
+    DIR=$1 # First positional argument for the input directory
+    SHEET=$2 # Second positional argument for the sample sheet
+    OUT=$3 # Third positional argument for the output directory
+
+    # Load the bclconvert installation path
+    module load bclconvert/4.2.7
+
+    # bcl-convert command
+    bcl-convert --bcl-input-directory $DIR --output-directory $OUT --sample-sheet $SHEET --shared-thread-odirect-output true --sample-name-column-enabled true --bcl-sampleproject-sub
+    directories true
+    ```
+
+2.  **Run `bcl-convert`**
+
+    ``` bash
+    # Run the doDemux_bclconvert.sh wrapper
+    sbatch -p priority -c 24 --mem 250000  -t 24:0:0 \
+        doDemux_bclconvert.sh \ # full path for the created bash script
+        /data/NextSeq1000/runs/run \ # full path for the sequencing run output
+        samplesheet.csv \ # sample sheet located in current directory
+        /path/to/output # full path for output directory
+    ```
+
+3.  **You might need to change some out directory permissions**
+
+    ``` {#chmod .bash}
+    # Change directory permissions
+    chmod +xr -R output/Project/ # example for a 10X run
+    ```
+
+4.  **Verify a successful BCL-convert run by inspecting the `slurm-[jobid].out` file. Should look like this:**
+
+    ``` texinfo
+    Index Read 2 is marked as Reverse Complement in RunInfo.xml: The barcode and UMI outputs will be output in Reverse Complement of Sample Sheet inputs.
+    Sample sheet being processed by common lib? Yes
+    SampleSheet Settings: 
+      BarcodeMismatchesIndex1 = 1
+      BarcodeMismatchesIndex2 = 1
+      CreateFastqForIndexReads = 0
+
+    shared-thread-linux-native-asio output is enabled
+    WARNING: shared-thread-linux-native-asio output could have low performance or hang if output directory is on a distributed file system
+    bcl-convert Version 00.000.000.4.2.7
+    Copyright (c) 2014-2022 Illumina, Inc.
+    Command Line: --bcl-input-directory /data/NextSeq1000/runs/run --output-directory output --sample-sheet samplesheet.csv --shared-thread-odirect-output true --sample-name-column-enabled true --bcl-sampleproject-subdirectories true 
+    Conversion Begins.
+    # CPU hw threads available: 24
+    Parallel Tiles: 4. Threads Per Tile: 6
+    SW compressors: 24
+    SW decompressors: 12
+    SW FASTQ compression level: 1
+    Conversion Complete.
+    ```
+
+## Generate MultiQC report
+
+MultiQC can be used to generate a sequencing report. MultiQC only requires the main output directory of BCL-convert.
+
+Here is an implementation of MultiQC using Singularity containers
+
+-   A wrapper script for MultiQC, i.e. `multiqc.sh`:
+
+    ``` {#multiqc .bash}
+    #!/usr/bin/bash
+
+    DIR=$1
+
+    singularity exec --bind $DIR:/run /apps/linux/5.4/multiqc/lib/multiqc-1.22.3.sif multiqc --outdir /run/MultiQC/ /run
+    ```
+
+-   Run the script on your system
+
+    ``` {#runmultiqc .bash}
+    # Run MultiQC
+    /apps/linux/5.4/multiqc/bin/multiqc.sh /path/to/bcl-convert/output
+    ```

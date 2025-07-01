@@ -1,0 +1,141 @@
+---
+title: "Getting started with HPC systems"
+author: "Javier Carpinteyro Ponce"
+format: html
+editor: visual
+code-annotations: hover
+date: 02/19/2025
+editor_options: 
+  chunk_output_type: console
+toc: true
+self-contained: true
+---
+
+## 
+
+![AI-generated (Gemini Advanced 2.0). Prompt: *Generate an image of a caricaturized HPC computing resources of a research institute in genomics and developmental biology. Make sure image does not include any text.*](images/Gemini_Generated_Image_drwfmadrwfmadrwf.jpeg){fig-alt="Prompt: Generate an image of a caricaturized HPC computing resources of a research institute in genomics and developmental biology. Make sure image does not contain any text" width="686" height="468"}
+
+This is a short and \[hopefully\] simple tutorial for guiding people on how to use a HPC cluster for running their analyses. This is intended to be very generic so it is not covering a particular HPC for a specific institution. Please contact your corresponding HPC system administrator for requesting access to computing resources.
+
+## What is a HPC cluster?
+
+A HPC cluster is the combination of:
+
+-   Many individual machines, each referred to as "nodes"
+
+-   Fast shared storage, accessible to all nodes
+
+-   All interconnected over high speed networks and/or specialized interconnects
+
+-   With resource access managed by a scheduler (i.e. slurm)
+
+![](images/ChatGPT%20Image%20Jul%201,%202025%20at%2003_24_05%20PM.png){fig-align="center" width="400" height="413"}
+
+## Get started with your analyses
+
+A typical workflow on an HPC cluster includes:
+
+-   **Log in**: Use the command line SSH or web interface to access the cluster
+
+    -   An example on how to use the command line to log in via SSH to BSE-HPC:
+
+        -   `$ ssh user@hpc.institution.edu`
+
+-   **Transfer Data**: Move data from your local computer and/or other sources to the HPC cluster
+
+-   **Find Software**: Access existing software from the cluster, download from a remote source, or compile your own code
+
+    -   As an example, you can find and load existing software via `module` :
+
+        ``` bash
+        # To list the available/installed software
+        user@login1:~$ module avail
+        --------------------- /institution/hpcdata/software/rhel9/modules/bio ---------------------------------   
+        alphafold/2.3.2             bwa/0.7.17                   guppy/6.0.1           metaxa2/2.2.3            
+
+        # To load software, i.e. alphafold
+        user@login1:~$ module load alphafold/2.3.2
+
+        # Ready to use alphfold
+        user@login1:~$ alphafold
+        Usage: /institution/hpcdata/software/containers/alphafold/alphafold_2.3.2.sh <OPTIONS>
+
+        Required Parameters:
+        -o <output_dir>         Path to a directory that will store the results.
+        -f <fasta_file>         Path to a FASTA file containing one sequence
+        ...
+        ```
+
+-   **Prepare Input**: Set up necessary files for calculation
+
+-   **Prepare Job Script**: Create a job script with the commands to run the cluster. Here is an example of a `alphafold.sh` script
+
+    ``` bash
+    #!/bin/bash
+    #SBATCH --job-name=alphafold
+    #SBATCH --output=alphafold_%j.out
+    #SBATCH --error=alphafold_%j.err
+    #SBATCH --nodes=1
+    #SBATCH --cpus-per-task=16 # Adjust based on your system and needs
+    #SBATCH --mem=64G       # Adjust memory as needed
+    #SBATCH --time=24:00:00  # Adjust runtime as needed
+    #SBATCH --gres=gpu:1     # Request a GPU
+
+    module load alphafold # Or however you load the alphafold environment
+
+    # Example command to run AlphaFold
+    alphafold run_prediction \
+      --fasta_paths=target.fasta \
+      --output_dir=output_dir \
+      --data_dir=/path/to/alphafold/data \
+      --preset=model_1_ptm \
+      --max_template_date=2023-12-31
+
+    #Explanation of important parts:
+
+    #SBATCH directives:
+    #   --job-name: Name of the job.
+    #   --output: Output file.
+    #   --error: Error file.
+    #   --nodes: Number of nodes.
+    #   --cpus-per-task: Number of CPU cores per task.
+    #   --mem: Memory allocation.
+    #   --time: Maximum runtime.
+    #   --gres=gpu: Number of GPUs requested.
+
+    #module load alphafold: Loads the AlphaFold environment. This will vary depending on your HPC setup.
+    ```
+
+-   **Submit Jobs**: Send your batch submission to start the calculation:
+
+    ``` bash
+    user@login1:~$ sbatch alphafold.sh
+    ```
+
+-   **Monitor Progress**: Check the status of your calculations
+
+    ``` bash
+    user@login1:~$ squeue
+                 JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+                 62847 partition   alphafold  user  R      13:05      1 vgpu-2017-001
+    ```
+
+    -   `JOBID`: A unique numerical identifier for each job
+
+    -   `PARTITION`: The name of the partition (queue) where the job is submitted
+
+    -   `NAME`: The name assigned to the job
+
+    -   `USER`: The username who submitted the job
+
+    -   `ST`: The current status of the job: `PD` Pending, `R` Running, `CD` Completed, `F` Failed, `S` Suspended
+
+    -   `TIME`: The amount of time the job has been running
+
+    -   `NODES`: the number of noes allocated to the job
+
+    -   `NODELIST(REASON)`: The names of nodes allocated to the job. If the job is pending, this column may display the reason why it's waiting(e.g. "Resources", "Priority", "Dependency")
+
+-   **Analyze Results**: Review results when they finish either on the HPC or back on your local computer for analysis and visualization.
+
+### Happy computing!

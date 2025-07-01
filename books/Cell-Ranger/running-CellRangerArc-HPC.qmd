@@ -1,0 +1,308 @@
+---
+title: "How to run Cell Ranger Arc on HPC"
+author: "Javier Carpinteyro Ponce"
+format: html
+editor: visual
+code-annotations: hover
+date: 02/14/2024
+editor_options: 
+  chunk_output_type: console
+toc: true
+self-contained: true
+---
+
+A short tutorial that shows how to get started with 10x Genomics Cell Ranger Arc version `2.0.2`. The examples below show how to run `cellranger-arc count` for primary analysis of multiomic (ATAC + GEX) single-cell/nuclei sequencing data. This tutorial assumes that Cell Ranger Arc has been installed in your system and it is fully functional.
+
+## Demultiplex sequence data with BCL-convert
+
+Sample sheet for demultiplexing is slightly different from a standard single-cell experiment:
+
+### Create sample sheet
+
+1.  ***Demultiplex ATAC-seq and GEX sequencing runs***: Populate the file with the sample/experiment information. Sample sheet for demultiplexing ATAC-seq data would include the "***TrimUMI,0***", and "***OverrideCycles,Y50;I8;U24;Y49***" for the *\[BCLConvert_Settings\]* section, as specified [here](https://support.10xgenomics.com/single-cell-multiome-atac-gex/software/pipelines/latest/using/bcl2fastq-direct#bclconvert-download). Note that these configuration settings correspond to sequencing runs for libraries created with the [*Single Index Kit N Set A*](https://docs.google.com/spreadsheets/d/1OxkFiOhYaTfJKRG6gZYUvuUwBU-aKG_fvve9h2SnDtY/edit?usp=sharing). Those settings are not needed when the [*Dual Index kit TT Set A*](https://docs.google.com/spreadsheets/d/1rzXr8-_6iOjAhcswxBpQbr75MF2eMECCsffWJAsPeZY/edit?usp=sharing) is used for library preparation.
+
+    -   Final sample sheet for the single index libraries should look like this. Barcode index sequences are showed also as example:
+
+        ``` bash
+        [Header]
+        FileFormatVersion,2
+
+        [BCLConvert_Settings]
+        CreateFastqForIndexReads,1
+        TrimUMI,0
+        OverrideCycles,Y50;I8;U24;Y49
+
+        [BCLConvert_Data]
+        Sample_ID,index,Sample_Project,Sample_Name
+        SAMPLE1,AAACGGCG,AAGH72CM5,SAMPLE1
+        SAMPLE1,CCTACCAT,AAGH72CM5,SAMPLE1
+        SAMPLE1,GGCGTTTC,AAGH72CM5,SAMPLE1
+        SAMPLE1,TTGTAAGA,AAGH72CM5,SAMPLE1
+        SAMPLE2,AGCCCTTT,AAGH72CM5,SAMPLE2
+        SAMPLE2,CAAGTCCA,AAGH72CM5,SAMPLE2
+        SAMPLE2,GTGAGAAG,AAGH72CM5,SAMPLE2
+        SAMPLE2,TCTTAGGC,AAGH72CM5,SAMPLE2
+        ```
+
+    -   Final sample sheet for the double index libraries should look like this:
+
+        ``` bash
+        [Header]
+        FileFormatVersion,2
+        FlowCellType,P2
+        [BCLConvert_Settings]
+        CreateFastqForIndexReads,0
+        BarcodeMismatchesIndex1,1
+        BarcodeMismatchesIndex2,1
+        [BCLConvert_Data]
+        Sample_ID,index,index2,Sample_Project,Sample_Name
+        SAMPLE1_ID,TATCAGCCTA,GTTTCGTCCT,PROJECT,SAMPLE1
+        SAMPLE2_ID,GCCCGATGGA,AATCGTCTAG,PROJECT,SAMPLE2
+        ```
+
+### **Run BCL-Convert and generate MultiQC report**
+
+One sample sheets have been created, you should run `bcl-convert` and `multiqc` separately for the ATAC and GEX portions. The process is the same as the one show in:
+
+-   [How to Run BCL-Convert on HPC](BCL-convert/running-BCLconvert-HPC.qmd)
+
+## Run Cell Ranger Arc count
+
+### **Create libraries CSV file**
+
+Cell Ranger Arc count needs, as main input, a libraries CSV file that specifies the location of the ATAC and GEX FASTQ files associated with the sample. It is a 3-column CSV file with the following column names: ***fastqs***, ***sample***, ***library_type***. ***fastqs*** column will specify the full path to the directory containing the demultiplexed FASTQ files for the sample. ***sample*** column specifies the sample name assigned as the ***Sample_ID***. ***library_type*** specifies the library type with only two possible options: *`Chromatin Accessibility`* if sample is ATAC-seq data or *`Gene Expression`* for a Multiome GEX library. Final library file should look like this:
+
+``` bash
+fastqs,sample,library_type
+/path/to/FastQs/,SAMPLE1,Chromatin Accessibility
+/path/to/FastQs/,SAMPLE1,Gene Expression
+```
+
+### Run Cell Ranger Arc
+
+1.  **Create the `cellranger-arc count` wrapper, i.e. `doScRNA-arc.2.0.2.sh`**:
+
+    ``` {#crarcwrapper .bash}
+    #!/bin/bash
+
+    module load cellranger-arc/2.0.2
+
+    TEMPLATE=/data/10x/processing/slurm.template
+
+    SAMPLE=$1
+    REFERENCE=$2
+    LIBRARIES=$3
+    #PROJECT=$4
+
+    cellranger-arc count --jobmode=$TEMPLATE --id=$SAMPLE\_count --reference=$REFERENCE --libraries=$LIBRARIES
+    ```
+
+    This is an example of the `slurm.template` you could use for your system (provided by 10x Genomics). You might need to consult your system administrator for specific settings.
+
+    ``` bash
+    #!/usr/bin/env bash
+    #
+    # Copyright (c) 2016 10x Genomics, Inc. All rights reserved.
+    #
+    # =============================================================================
+    # Setup Instructions
+    # =============================================================================
+    #
+    # 1. Add any other necessary Slurm arguments such as partition (-p) or account
+    #    (-A). If your system requires a walltime (-t), 24 hours (24:00:00) is
+    #    sufficient.  We recommend you do not remove any arguments below or Martian
+    #    may not run properly.
+    #
+    # 2. Change filename of slurm.template.example to slurm.template.
+    #
+    # =============================================================================
+    # Template
+    # =============================================================================
+    #
+    #SBATCH -J __MRO_JOB_NAME__
+    #SBATCH --export=ALL
+    #SBATCH --nodes=1 --ntasks-per-node=__MRO_THREADS__
+    #SBATCH --signal=2
+    #SBATCH --no-requeue
+    ### Alternatively: --ntasks=1 --cpus-per-task=__MRO_THREADS__
+    ###   Consult with your cluster administrators to find the combination that
+    ###   works best for single-node, multi-threaded applications on your system.
+    #SBATCH --mem=__MRO_MEM_GB__G
+    #SBATCH -o __MRO_STDOUT__
+    #SBATCH -e __MRO_STDERR__
+
+    #SBATCH -p priority
+    #SBATCH -t 72:0:0
+
+    __MRO_CMD__
+    ```
+
+2.  **Run the `cellranger-arc count` wrapper**
+
+    ``` {#crarcrun .bash}
+    nohup doScRNA-arc.2.0.2.sh \
+        SAMPLE \
+        /path/to/reference/ \
+        /path/to/libraries.csv 
+        > nohup.SAMPLE-1.out &
+    ```
+
+    -   Arguments of the `doScRNA-arc.2.0.2.sh` wrapper need to be entered strictly in the same order as below:
+
+        -   `SAMPLE`: Sample name
+
+        -   `/path/to/reference/`: Full path to the reference genome
+
+        -   `/path/to/libraries.csv`: libraries CSV file
+
+        -   `> > nohup.SAMPLE-1.out &`: `>` redirect stdout to the \> nohup.SAMPLE-1.out file
+
+3.  **Inspect the main visual report.**
+
+    -   If everything went well, `cellranger-arc count` should have created the `web_summary.html` file located in the `[Sample_ID]_count/outs/` directory.
+
+        -   Main info to look for in the report:
+
+            -   Estimated number of cells
+
+            -   ATAC Median high-quality fragments per cell
+
+            -   GEX Median genes per cell
+
+        -   For more details, take a look at the main 10x Genomics documentation: <https://www.10xgenomics.com/support/software/cell-ranger-arc/latest/analysis/outputs/web-summary>
+
+## Cell Ranger Arc aggr
+
+Cell Ranger Arc aggr is designed to pool the results of multiple GEM wells by `cellranger-arc count`. It produces a single feature-barcode matrix containing all the data. The barcode sequences for each channel are distinguished by a GEM well suffix appended to the barcode sequence. More info [here](https://www.10xgenomics.com/support/software/cell-ranger-arc/latest/analysis/running-pipelines/aggregating-multiple-gem-wells-aggr).
+
+### Create Aggregation CSV file
+
+To run the `cellranger-arc aggr` pipeline, an aggregation csv file is needed. This is a 4-column csv file containing the following information: *library_id*, *atac_fragments*, *per_barcode_metrics*, *gex_molecule_info.*
+
+-   `library_id`: Unique identifier for this input GEM well. i.e. JMT1
+
+-   `atac_fragments`: Path to the `atac_fragments.tsv.gz` file produced by `cellranger-arc count`. i.e. `/data/10x/qc/JMT1-12_count/outs/atac_fragments.tsv.gz`.
+
+-   `per_barcode_metrics`: Path to the `per_barcode_metrics.csv` file produced by `cellranger-arc count`. i.e. `/data/10x/qc/JMT1-12_count/outs/per_barcode_metrics.csv`.
+
+-   `gex_molecule_info`: Path to the `gex_molecule_info.h5` file produced by `cellranger-arc count`. i.e. `/data/10x/qc/JMT1-12_count/outs/gex_molecule_info.h5`.
+
+-   **\[Optional\]**: Additional custom columns containing library meta-data (e.g. lab or sample origin). These custom library annotation do not affect the analysis pipeline but can be visualized downstream in the Loupe Browser.
+
+The final aggregation CSV file should look like this:
+
+``` bash
+library_id,atac_fragments,per_barcode_metrics,gex_molecule_info,origin
+SAMPLE1,/path/to/SAMPLE1_count/outs/atac_fragments.tsv.gz,/path/to/SAMPLE1_count/outs/per_barcode_metrics.csv,/path/to/SAMPLE1_count/outs/gex_molecule_info.h5,mouse1
+SAMPLE2,/path/to/SAMPLE2_count/outs/atac_fragments.tsv.gz,/path/to/SAMPLE2_count/outs/per_barcode_metrics.csv,/path/to/SAMPLE2_count/outs/gex_molecule_info.h5,mouse2
+SAMPLE3,/path/to/SAMPLE3_count/outs/atac_fragments.tsv.gz,/path/to/SAMPLE3_count/outs/per_barcode_metrics.csv,/path/to/SAMPLE3_count/outs/gex_molecule_info.h5,mouse3
+```
+
+### Run Cell Ranger Arc aggr
+
+1.  **Create the `cellranger-arc aggr` wrapper script, i.e. `doScRNA-arc-aggr.2.0.2.sh`**
+
+    ``` {#crarcaggr .bash}
+    #!/bin/bash
+
+    module load cellranger-arc/2.0.2
+
+    TEMPLATE=/data/10x/processing/slurm.template
+
+    ID=$1 # RUN ID
+    CSV=$2 # Path to aggrlib.csv file
+    REFERENCE=$3 # Path to reference genome/transcriptome
+
+    cellranger-arc aggr --jobmode=$TEMPLATE --id=$ID\_aggr --csv=$CSV --reference=$REFERENCE
+    ```
+
+    The script above uses the same `slurm.template`
+
+2.  **Run the** `cellranger-arc aggr` **wrapper**.
+
+    ``` bash
+    # example for JMT1-7
+
+    nohup doScRNA-arc-aggr.2.0.2.sh \
+        RUN_ID \
+        /path/to/aggrlib.csv \
+        /path/to/reference/genome/transcriptome/ \
+        > nohup.RUN_IDaggr.out &
+    ```
+
+3.  **Arguments of the `doScRNA-arc-aggr.2.0.2.sh` wrapper need to be entered strictly in the same order as below:**
+
+    -   `RUN_ID`: Custom run ID and output folder name
+
+    -   `/path/to/aggrlib.csv`: Path to the aggregation csv file
+
+    -   `/path/to/reference/genome/transcriptome/`: Path to folder containing the reference genome/annotations.
+
+4.  **A successful run will conclude with a message like this in the** **`nohup.RUN_IDaggr.out` file:**
+
+    ``` bash
+    2021-04-26 05:16:01 [runtime] (update)          ID.AGG123.SC_ATAC_GEX_AGGREGATOR_CS.ATAC_GEX_CLOUPE_PREPROCESS.fork0 join_running
+    2021-04-26 05:20:28 [runtime] (join_complete)   ID.AGG123.SC_ATAC_GEX_AGGREGATOR_CS.ATAC_GEX_CLOUPE_PREPROCESS
+
+    Outputs:
+    - Barcoded and aligned fragment file:           /home/jdoe/runs/AGG123/outs/atac_fragments.tsv.gz
+    - Fragment file index:                          /home/jdoe/runs/AGG123/outs/atac_fragments.tsv.gz.tbi
+    - Bed file of all called peak locations:        /home/jdoe/runs/AGG123/outs/atac_peaks.bed
+    - Filtered peak barcode matrix in hdf5 format:  /home/jdoe/runs/AGG123/outs/raw_feature_bc_matrix.h5
+    - Filtered peak barcode matrix in mex format:   /home/jdoe/runs/AGG123/outs/raw_feature_bc_matrix
+    - Filtered peak barcode matrix in hdf5 format:  /home/jdoe/runs/AGG123/outs/filtered_feature_bc_matrix.h5
+    - Filtered peak barcode matrix in mex format:   /home/jdoe/runs/AGG123/outs/filtered_feature_bc_matrix
+    - Secondary analysis outputs:
+        clustering:
+          atac: {
+            ...
+          }
+          gex:  {
+            ...
+          }
+        dimensionality_reduction:
+          atac: {
+            ...
+          }
+          gex:  {
+            ...
+          }
+        feature_linkage:
+          ...
+        tf_analysis:
+          ...
+    - Loupe Browser input file:                     /home/jdoe/runs/AGG123/outs/cloupe.cloupe
+    - csv summarizing important metrics and values: /home/jdoe/runs/AGG123/outs/summary.csv
+    - Annotation of peaks with genes:               /home/jdoe/runs/AGG123/outs/atac_peak_annotation.tsv
+    - HTML summary:                                 /home/jdoe/runs/AGG123/outs/web_summary.html
+    - Input data supplied for aggregation:          [
+        {
+            "atac_fragments": "/home/jdoe/runs/LV123/outs/atac_fragments.tsv.gz",
+            "gex_molecule_info": "/home/jdoe/runs/LV123/outs/gex_molecule_info.h5",
+            "library_id": "LV123",
+            "metadata": {},
+            "per_barcode_metrics": "/home/jdoe/runs/LV123/outs/per_barcode_metrics.csv"
+        },
+        {
+            "atac_fragments": "/home/jdoe/runs/LB456/outs/atac_fragments.tsv.gz",
+            "gex_molecule_info": "/home/jdoe/runs/LB456/outs/gex_molecule_info.h5",
+            "library_id": "LB456",
+            "metadata": {},
+            "per_barcode_metrics": "/home/jdoe/runs/LB456/outs/per_barcode_metrics.csv"
+        },
+        {
+            "atac_fragments": "/home/jdoe/runs/LP789/outs/atac_fragments.tsv.gz",
+            "gex_molecule_info": "/home/jdoe/runs/LP789/outs/gex_molecule_info.h5",
+            "library_id": "LP789",
+            "metadata": {},
+            "per_barcode_metrics": "/home/jdoe/runs/LP789/outs/per_barcode_metrics.csv"
+        }
+      ]
+    - Input data supplied for aggregation as CSV:   /home/jdoe/runs/AGG123/outs/aggr.csv
+
+    Pipestance completed successfully!
+    ```
+
+### Inspect main `cellranger-arc aggr` results
+
+From 10x Genomics [documentation](https://www.10xgenomics.com/support/software/cell-ranger-arc/latest/analysis/running-pipelines/aggregating-multiple-gem-wells-aggr#pipeline-outputs): Once `cellranger-arc aggr` has successfully completed, you can browse the resulting summary HTML file in any supported web browser, open the `.cloupe` file in Loupe Browser, or refer to the [Understanding Output](https://www.10xgenomics.com/support/software/cell-ranger-arc/latest/analysis/understanding-output) section to explore the data by hand. For machine-readable versions of the summary metrics, refer to the `cellranger-arc aggr` section of the Summary Metrics page.

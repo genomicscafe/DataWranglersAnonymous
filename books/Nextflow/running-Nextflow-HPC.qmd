@@ -1,0 +1,174 @@
+---
+title: "Running Nextflow on HPC"
+author: "Javier Carpinteyro Ponce"
+format: html
+editor: visual
+code-annotations: hover
+date: 07/16/2024
+editor_options: 
+  chunk_output_type: console
+toc: true
+self-contained: true
+---
+
+## What is Nextflow?
+
+Nextflow is a "workflow orchestration engine" and a domain-specific language (DSL) designed for the creation of scalable and reproducible computational workflows. Nextflow core features are:
+
+-   Workflow portability and reproducibility - You can run the same analysis on either our local HPC, the Caltech HPC, and even on a commercial cloud.
+
+-   Scalability of parallelization and deployment - You can analyse from 1 sample to 100+ without requiring significant extra work.
+
+-   Integration of existing tools, systems, and industry standards - You can use community development pipelines i.e. from https://nf-co.re/pipelines for applications in RNA-seq, CUT&RUN, and bacterial assembly.
+
+In the following links you can find and example of an output report built by MultiQC as part of the nf-core/rnaseq pipeline: <https://nf-co.re/rnaseq/3.14.0/results/rnaseq/results-b89fac32650aacc86fcda9ee77e00612a1d77066/aligner_star_rsem/multiqc/star_rsem/?file=multiqc_report.html>
+
+Full description of the output files of the nf-core/pipeline can be found [here](https://nf-co.re/rnaseq/3.14.0/docs/output).
+
+More info about Nextflow [here](https://training.nextflow.io/basic_training/).
+
+Simple RNA-seq workflow tutorial [here](https://training.nextflow.io/basic_training/rnaseq_pipeline/).
+
+![From https://training.nextflow.io/basic_training](https://training.nextflow.io/basic_training/img/execution_abstraction.png){fig-align="center"}
+
+## How to run Nextflow?
+
+Like any programming language, you can start writing your own workflows using a text editor. For example, this [Nextflow tutorial](https://www.nextflow.io/docs/latest/your-first-script.html) shows how to get started with your first Nextflow script. This script with the `.nf` extension can be executed using Nextflow, i.e.:
+
+``` bash
+# use 'nextlow run'
+nextflow run tutorial.nf
+
+N E X T F L O W  ~  version 23.10.0
+executor >  local (3)
+[69/c8ea4a] process > splitLetters   [100%] 1 of 1 ✔
+[84/c8b7f1] process > convertToUpper [100%] 2 of 2 ✔
+HELLO
+WORLD!
+```
+
+## How to run Nextflow in your local HPC?
+
+Nextflow can run in most linux computing environments, and depending on the amount of data you would need to make sure you have enough computing resources. If you are new to HPC please take a look at the [Getting started with HPC systems](Computing-Resources/getstarted-with-HPC.qmd) tutorial.
+
+First login to your HPC using your credentials, i.e.:
+
+``` bash
+# use ssh to login
+ssh user@hpc.ciwemb.edu
+```
+
+Nextflow is usually installed on HPC systems via modules. To make Nextflow available for execution, the installation needs to be loades via `module load`. In addition, the `java` installation also needs to be loaded as it is the main dependency for `nextflow`:
+
+``` bash
+# load java and nextflow
+module load java/17.0.6-amzn
+module load nextflow/23.10.0
+```
+
+As multiple version of Nextflow are installed, you need to determine the version that works for your analyses. If a version you need is not installed, please contact the Genomics Cafe team.
+
+Now that `nextflow` is available, you can go ahead and run Nextflow, i.e.: `nextflow run script.nf`. In this tutorial, however, we are covering how to run the `rnaseq` pipeline build by the nf-core community. The `nf-core/rnaseq` workflow can be used to analyse RNA-seq data coming from organisms with a reference genome and annotation. More info about the pipeline [here](https://nf-co.re/rnaseq/3.14.0/).
+
+## What is nf-core?
+
+nf-core is a community-driven initiative focused on developing curated workflows for biological data using Nextflow. It offers a valuable resource for researchers, providing a standardized, reliable, and efficient way to conduct bioinformatics pipelines. More info [here](https://nf-co.re).
+
+![From nf-core/rnaseq](https://raw.githubusercontent.com/nf-core/rnaseq/3.11.1//docs/images/nf-core-rnaseq_metro_map_grey.png){fig-align="center"}
+
+Image above is a "tube map"-style pipeline diagram for the nf-core/rnaseq workflow. This is a typical graphical representation of the nf-core pipelines. Note the resemblance to the London Underground [map](https://tfl.gov.uk/cdn/static/cms/images/tube-map.gif). If interested on how to create this type of tube diagrams using Inkscape, take a look at this tutorial from the nf-core community: <https://nf-co.re/events/2022/bytesize-inkscape>
+
+## How to get started with the `nf-core/rnaseq` pipeline?
+
+To run the `nf-core/rnaseq` pipeline you need the following input files:
+
+-   Reference genome assembly (i.e. `assembly.fa`)
+
+-   Genome annotation (i.e. `annotation.gtf`)
+
+-   RNA-seq data
+
+-   Sample sheet
+
+-   The Nextflow config file (i.e. `nextflow.config`)
+
+### The sample sheet
+
+For the `nf-core/rnaseq` pipeline, you need to create a sample sheet with the information about the samples you would like to analyze before running the pipeline. The sample sheet is usually a csv (comma separated values) file with the following basic structure:
+
+``` bash
+sample,fastq_1,fastq_2,strandedness
+1aGal,1aGal_R1.fastq.gz,1aGal_R2.fastq.gz,auto
+```
+
+Where `sample` is the sample name. `fastq_1` and `fastq_2` are the sequence files (leave `fastq_2` blank for single-end sequencing), it is a good practice to use the full path to tell the location of those files. `strandedness` is use to specify the sequence strand (leave `auto` to infer strandedness automatically).
+
+All pipelines built by the nf-core community would require a sample sheet and the information contained on it depends on the specific pipeline used. For example, you can take a look at the sample sheet configuration for the `nf-core/rnaseq` pipeline [here](https://nf-co.re/rnaseq/3.14.0/docs/usage/#samplesheet-input).
+
+### The config file
+
+The `nextflow.config` file is a configuration file that will tell Nextflow how to manage the workflow executions. This file needs to be located in the same directory you are running `nextflow`. The config file we use for `nextflow` run on hpc.ciwemb.edu would typically look like this:
+
+``` bash
+singularity.cacheDir = '/path/to/singularity/images/rnaseq/3.14.0'
+singularity.enabled = true
+process.executor = 'slurm' 
+process.queue = 'shared' # this depends on your HPC system
+```
+
+The `singularity.cacheDir` parameter is where you specify the path of the directory where the singularity images are located/saved for all the dependencies of the pipeline. The `singularity.enabled` parameter allow us to tell Nextflow that we want to use Singularity for dependency executions. With the `process.executor` parameter we tell Nextflow we are using Slurm as our job scheduler (as we are using an slurm-based HPC). With `process.queue` we specify which partition of our HPC want to use (all regular users must use the `shared` partition).
+
+## Run the `nf-core/rnaseq` pipeline
+
+Now that we have all input files and `nextflow` and `java` loaded in our environment, it is time to run Nextflow:
+
+1.  Create a new working directory
+
+``` bash
+# use mkdir to create a new directory
+mkdir test_rnaseq
+# use cd to change directory
+cd test_rnaseq
+```
+
+2.  Create your sample sheet and save it into the working directory (i.e. `samplesheet.csv`):
+
+``` bash
+sample,fastq_1,fastq_2,strandedness
+SAMPLE1,SAMPLE1_R1_001.fastq.gz,SAMPLE1_R2_001.fastq.gz,auto
+SAMPLE2,SAMPLE2_R1_001.fastq.gz,SAMPLE2_R2_001.fastq.gz,auto
+```
+
+3.  Create and save the `nextflow.config` file:
+
+``` bash
+singularity.cacheDir = '/path/to/singularity/images/rnaseq/3.14.0'
+singularity.enabled = true
+process.executor = 'slurm'
+process.queue = 'shared'
+```
+
+4.  Run the pipeline making sure you use the appropriate version of the nf-core/rnaseq pipeline. And make sure you are using the right reference genome and annotation files:
+
+``` bash
+# load java
+module load java/17.0.6-amzn
+# load nextflow
+module load nextflow/23.10.0
+# open a persistent terminal using the screen command
+screen
+# run nf-core/rnaseq 3.14.0
+nextflow run nf-core/rnaseq -r 3.14.0 --pseudo_aligner salmon -resume --input samplesheet.csv --outdir results --fasta /path/to/reference/genome.fa --gtf /path/to/reference/genome.gtf
+
+# To leave the persistent terminal without stoping nextflow:
+# Press Ctrl+A (release), then press D
+# Now you will be back to the main command line
+```
+
+Note that for the main command line, we still use the basic `nextflow run` command, but now we specified that we want to run the version `3.14.0` of the `nf-core/rnaseq`. Everything after the version number are arguments and parameters for the `nf-core/rnaseq` pipeline.
+
+For detail information about the `nf-core/rnaseq` parameters please refer to the main documentation: <https://nf-co.re/rnaseq/3.14.0/>
+
+### Inspect the output
+
+After a successful `nf-core/rnaseq` run with Nextflow, you can now inspect the main visual report that is generated using MultiQC.

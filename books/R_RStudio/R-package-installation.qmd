@@ -1,0 +1,88 @@
+---
+title: "Installing software in R"
+author: "Javier Carpinteyro Ponce"
+format: html
+editor: visual
+code-annotations: hover
+date: 05/20/2024
+editor_options: 
+  chunk_output_type: console
+toc: true
+self-contained: true
+---
+
+A short tutorial that shows how to find and install packages in R.
+
+## Where do we find installed packages in R?
+
+A typical installation of RStudio involves also the installation of `R`, which includes some default packages. These packages can be loaded into the current environment using the function `library()`. For example:
+
+``` r
+# load the mtcars package
+library("mtcars")
+```
+
+In some cases, there are some packages that might have been installed in non-standard locations with the purpose of better version control and space usage. But, **how do we get access to those packages?** If interested in using a specific package in `R` that has been installed in a non-standard location, you can use the `.libPaths()` function to load the path of the directory containing the installation of a specific package. For example:
+
+``` r
+# Tell R where the DESeq2 package is installed in /data/apps/R/4.3.2
+.libPaths("/data/apps/R/4.3.2/DESeq2")
+# Load the DESeq2 package using library()
+library(DESeq2)
+# DESeq2 functions ready to use
+```
+
+## But what is `.libPaths()`?
+
+`.libpaths()` is a function for setting the library search path (directory), which is where `R` looks for installed packages. `R` will have a default location in your system for installing packages where `.libpaths()` will look for them. In the following example, `/home/user/R/x86_64-pc-linux-gnu-library/4.3` is the default directory where `R` will look for packages:
+
+``` r
+# if you run .libpaths() with no arguments it gives you the current directory where R will look for installed packages:
+.libPaths()
+[1] "/home/jcarpinteyro/R/x86_64-pc-linux-gnu-library/4.3" "/opt/R/4.3.2/lib/R/library"
+```
+
+## What if I want to install a new package in `R`?
+
+If the package of interest has not been installed yet, you can install it by yourself using the functions in [How to install software/packages in R?](#install)
+
+By default, all the packages each user install by themselves will be installed in the `R` default directory. For example:
+
+``` r
+# New packages will be installed in "/home/user/R/x86_64-pc-linux-gnu-library/4.3" when using install.packages()
+.libPaths()
+[1] "/home/user/R/x86_64-pc-linux-gnu-library/4.3" "/opt/R/4.3.2/lib/R/library"
+# Install the dplyr package using install.packages()
+install.packages("dplyr")
+```
+
+You may have heard about `install.packages()` so let's take a peek behind the curtain on what it does!
+
+Using the command line (UNIX or Linux) you could go to `/home/user/R/x86_64-pc-linux-gnu-library/4.3` and you will see a new directory that contains all the necessary files to run the functions of the `dplyr` package:
+
+``` bash
+user@sandbox:~$ cd R/x86_64-pc-linux-gnu-library/4.3/
+user@sandbox:~/R/x86_64-pc-linux-gnu-library/4.3$ ls
+abind    BiocGenerics  bitops        dplyr          futile.options    GenomicRanges  locfit          Rcpp           S4Arrays   SparseArray           zlibbioc
+BH       BiocParallel  DelayedArray  formatR        GenomeInfoDb      IRanges        MatrixGenerics  RcppArmadillo  S4Vectors  SummarizedExperiment
+Biobase  BiocVersion   DESeq2        futile.logger  GenomeInfoDbData  lambda.r       matrixStats     RCurl          snow       XVector
+```
+
+## How to install packages in R? {#install}
+
+In `R` we have several ways to install software packages and the most common way is to do so is using the function `install.packages()` . This function will try to download and locally install packages available at CRAN ([The Comprehensive R Archive Network](https://cran.r-project.org)), which is a general purpose repository of packages. A usage example of the `install.packages()` could look as:
+
+``` r
+# Install tidyverse from CRAN
+install.packages("tidyverse")
+# Load tidyverse
+library("tidyverse")
+```
+
+Depending on the scientific field you might require to install and use more specialized packages. For example, [Bioconductor](https://bioconductor.org/books/3.12/OSCA/learning-r-and-more.html#) is an open-development software project for the analysis of genomic data. Bioconductor can be considered a repository of packages and, in order to install packages from this repository, we could use the function `BiocManager::install()`. A typical use of this function can look as:
+
+``` r
+# Use the install function from BiocManager to install DESeq2
+BiocManager::install("DESeq2")
+library("DESeq2")
+```

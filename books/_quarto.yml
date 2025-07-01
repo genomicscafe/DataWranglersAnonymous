@@ -1,0 +1,58 @@
+project:
+  type: book
+
+book:
+  title: "Data Wranglers Anonymous book repository"
+  author: "Genomics Cafe - Carnegie Science BSE"
+  favicon: Logo_BSECarnegieScience_black_RGB.png
+  description: A series of tutorials for getting started to computing resources.
+  keyword: R, Nextflow, HPC, data engineering
+  url: https://github.com/genomicscafe/DataWranglersAnonymous # need to make this public to put it as a github pages
+  sidebar: 
+    background: "#F5F5F5"
+    logo: Logo_BSECarnegieScience_black_RGB.png
+    search: true
+  repo-url: https://github.com/genomicscafe/DataWranglersAnonymous/
+  repo-subdir: books
+  repo-branch: master
+  repo-actions: [edit, issue, source]
+  image: Logo_BSECarnegieScience_black_RGB.png
+  comments:
+    giscus:
+      repo: genomicscafe/DataWranglersAnonymous
+  open-graph:
+    image: https://carnegiescience.refined.site/space/Comms/213319725/Visual+Identity?attachment=https://carnegiescience.refined.site/download/attachments/213319725/Logo_BSECarnegieScience_black_RGB.png&type=image&filename=Logo_BSECarnegieScience_black_RGB.png
+    description: A series of tutorials for getting started to computing resources.
+
+  chapters:
+    - index.qmd
+    - part: "Computing Resources"
+      chapters:
+        - Computing-Resources/getstarted-with-HPC.qmd
+    - part: "BCL Convert"
+      chapters:
+        - BCL-convert/running-BCLconvert-HPC.qmd
+    - part: "Cell Ranger"
+      chapters: 
+        - Cell-Ranger/running-CellRanger-HPC.qmd
+        - Cell-Ranger/running-CellRangerArc-HPC.qmd
+    - part: "Nextflow"
+      chapters:
+        - Nextflow/running-Nextflow-HPC.qmd
+        - Nextflow/nextflow-installnotes.qmd
+    - part: "Curio"
+      chapters:
+        - CurioSeeker/running-seeker-HPC.qmd
+        - CurioSeeker/seeker3_0_0_installnotes.qmd
+    - part: "R and RStudio"
+      chapters:
+        - R_RStudio/R-package-installation.qmd
+
+
+format:
+  html:
+    theme:
+      light: cosmo
+    code-fold: false
+    css: custom.css
+    backgroundcolor: "#F5F5F5"

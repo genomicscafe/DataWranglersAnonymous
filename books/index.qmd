@@ -1,0 +1,58 @@
+# Preface {.unnumbered}
+
+This is a collection of tutorials for helping people to get started with a variety of computational resources for sequencing data analysis.
+
+The tutorials are meant to be as generic as possible given that each person's computing resources might greatly differ with each other.
+
+## Who is this for?
+
+This is intended for people who has little to no experience in bioinformatics and would like to get started with some of the computational resources available at Carnegie Science's BSE division.
+
+## Why?
+
+This is an effort to condense the vast amount of resources out there, which can make things confusing and frustrating when it comes to implementation.
+
+## Current content
+
+The current collection has the following topics:
+
+-   Computing Resources
+    - [Getting started with HPC systems](Computing-Resources/getstarted-with-HPC.qmd)
+
+-   BCL Convert
+    - [How to Run BCL-Convert on HPC](BCL-convert/running-BCLconvert-HPC.qmd)
+
+-   Cell Ranger
+    - [How to run Cell Ranger on HPC](Cell-Ranger/running-CellRanger-HPC.qmd)
+    - [How to run Cell Ranger Arc on HPC](Cell-Ranger/running-CellRangerArc-HPC.qmd)
+
+-   Nextflow
+    - [Running Nextflow on HPC](Nextflow/running-Nextflow-HPC.qmd)
+
+-   Curio
+    - [How to run Curio seeker on HPC](CurioSeeker/running-seeker-HPC.qmd)
+
+-   R and RStudio
+    - [Installing software in R](R_RStudio/R-package-installation.qmd)
+
+## Credit
+
+Tutorials are a collective effort of the Genomics Cafe team at Carnegie-Embryology.
+
+    - Members at the creation of this repository:
+        - Javier Carpinteyro Ponce
+        - Frederick Tan
+        - Joseph Tran
+        - Rick Veader
+        - Xiaobin Zheng
+
+### Book template credits
+
+Book design and repository was inspired by and uses portions of the [Modern Polars](https://kevinheavey.github.io/modern-polars/) Quarto book by [Kevin Heavey](https://github.com/kevinheavey), including its `_quarto.yml` structure and design elements.
+
+
+Source repository: [kevinheavey/modern-polars](https://github.com/kevinheavey/modern-polars)
+
+## Contributing
+
+This book is free and open source, so please do [open an issue](https://github.com/genomicscafe/DataWranglersAnonymous/issues/new) if you notice a problem!

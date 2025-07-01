@@ -1,0 +1,204 @@
+---
+title: "How to run Curio seeker on HPC"
+author: "Javier Carpinteyro Ponce"
+format: html
+editor: visual
+code-annotations: hover
+date: 11/07/2024
+editor_options: 
+  chunk_output_type: console
+toc: true
+self-contained: true
+---
+
+A short tutorial that shows how to get started with the Curio Seeker pipeline version `3.0.0`. The examples below show how to run `curioseeker` for primary analysis of **spatial** **transcriptomics**. This tutorial assumes that Curio Seeker has been deployed in your system and it is fully functional.
+
+## Demultiplex sequence data with BCL-convert
+
+-   Refer to this tutorial for details on how to run BCL-convert on HPC:
+
+    -   [How to Run BCL-convert on HPC](BCL-convert/running-BCLconvert-HPC.qmd)
+
+## Running seeker on HPC
+
+Main input arguments:
+
+-   `samplesheet.csv`: This is made based on the experiment information and whether a pre-built or custom reference genome is used. Full path required. This file will also contain the full path for the bead barcodes file
+
+-   Full path for the main project directory where the `.nextflow.log` file will be saved
+
+-   Full path for the main output directory, i.e. `results/`
+
+-   Full path for the `work/` directory
+
+-   Full path for the `slurm.config` file
+
+-   `rawdata/` directory containing the sequence files
+
+Create the main project directory, i.e. `Spatial/`
+
+``` bash
+# go to data/Spatial/
+cd Spatial/
+
+# create new project directory
+mkdir SAMPLE
+```
+
+### With a curioseeker pre-built reference
+
+When running the seeker pipeline using one the provided pre-built references, the full path where the pre-built references are saved is required for the `--igenomes_base` argument. In addition, the `samplesheet.csv` file needs to contain the `genome` column where the **Reference ID** needs to be provided.
+
+The `samplesheet.csv` should look like this:
+
+``` texinfo
+sample,experiment_date,barcode_file,fastq_1,fastq_2,genome
+SAMPLE,2024-10-26,A0075_016_BeadBarcodes.txt,reads_R1_001.fastq.gz,reads_R2_001.fastq.gz,RefGenome
+```
+
+-   `sample`: custom sample name `_zf` stands for Zebrafish
+
+-   `experiment_date`: experiment data
+
+-   `barcode_file`: full path to the bead barcodes file
+
+-   `fastq_1` & `fastq_2`: full path for sequence files
+
+-   `genome`: Reference ID for the reference genome
+
+**Run the curio seeker pipeline:**
+
+``` bash
+# load java
+module load java/17.0.6-amzn
+
+# load nextflow 23.04.3
+module load nextflow/23.04.3
+
+# open a screen session
+screen
+
+# run the seeker pipeline
+nextflow -log Spatial/SAMPLE/.nextflow.log run /data/linux_3.10/curioseeker/3.0.0/main.nf \
+  --input Spatial/SAMPLE/sampleesheet.csv \
+  --outdir Spatial/SAMPLE/results/ \
+  -work-dir Spatial/SAMPLE/work/ \
+  --igenomes_base genomes/Spatial/ \
+  -resume \
+  -profile slurm \
+  -config Spatial/SAMPLE/slurm.config
+  
+# Detach screen session to keep using the regular command line
+## press ctrl+a [release and then press] d
+
+# Re-attach to the screen session
+## list current active sessions
+screen -ls 
+## select session ID and re-attach
+screen -r <session ID or name>
+```
+
+### With a custom reference
+
+When running the seeker pipeline using a custom-built reference genome, the `--igenomes_base` is omitted and the reference genome information is directly added to the `samplesheet.csv` file.
+
+The `samplesheet.csv` file should look like this:
+
+``` texinfo
+sample,experiment_date,barcode_file,fastq_1,fastq_2,genome,star_index,gtf
+SAMPLE,2024-10-11,A0075_007_BeadBarcodes.txt,reads_R1_001.fastq.gz,reads_R2_001.fastq.gz,RefGenome,/path/to/reference/STARIndex/,/path/to/reference/Genes/genes.gtf
+```
+
+-   `genome` this column contains the name of the directory where the custom reference was created
+
+-   `star_index` in this column, the full path to the `STARindex` directory needs to be specified
+
+-   `gtf` this column needs to specify the full path to the `genes.gtf` file created by the custom reference seeker wrapper (see below for detail on creating a custom reference)
+
+**Run the curio seeker pipeline:**
+
+The commands below show how to run the pipeline on an HPC system:
+
+``` bash
+# load java
+module load java/17.0.6-amzn
+
+# load nextflow 23.04.3
+module load nextflow/23.04.3
+
+# open a screen session
+screen
+# run the seeker pipeline
+nextflow -log Spatial/SAMPLE/.nextflow.log run/data/linux_3.10/curioseeker/3.0.0/main.nf \
+    --input Spatial/SAMPLE/sampleesheet.csv \
+    --outdir Spatial/SAMPLE/results/ \
+    -work-dir Spatial/SAMPLE/work/ \
+    -resume \
+    -profile slurm \
+    -config Spatial/SAMPLE/slurm.config
+    
+
+# Detach screen session to keep using the regular command line
+## press ctrl+a [release and then press] d
+
+# Re-attach to the screen session
+## list current active sessions
+screen -ls 
+## select session ID and re-attach
+screen -r <session ID or name>
+```
+
+## Inspect curio-seeker main report and output directory
+
+For a successful run, the seeker pipeline will generate a main output directory located in `Spatial/[projectID]/results/OUTPUT/[SampleID]/`.
+
+Located in the main `OUTPUT/[SampleID]/` directory, the main output files are described in the following picture (taken from the curiobioscience knowledgebase):
+
+![](images/clipboard-895162102.png)
+
+## Create a custom reference for curio seeker v3.0.0
+
+The necessary scripts are already downloaded and ready to run but the first two steps are listed for reference only.
+
+-   Create directory, i.e. `genomes/Spatial`
+
+    ``` bash
+    mkdir -p genomes/Spatial/
+    cd genomes/Spatial/
+    ```
+
+-   Download the script
+
+    ``` bash
+    wget https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/CurioSeeker_v2.0.0/generate_seeker_reference_v2.0.0.tar.gz -O - | tar -xzf -
+    cd generate_seeker_reference
+    ```
+
+-   Given that seeker uses `STAR 2.6.1d` . Then modify the `generate_seeker_reference.sh` script so it can run on HPC.
+
+-   The modified script, `generate_seeker_reference_slurm.sh`, contain these two additional lines:
+
+    ``` bash
+    #!/usr/bin/bash
+
+    module load STAR/2.6.1d
+    ```
+
+### Run the `generate_seeker_reference_slurm.sh` script
+
+To generate the custom reference, two files are needed:
+
+1.  Genome assembly in **fasta** format
+
+2.  Genome annotation in **gtf** format
+
+Then run the wrapper on `genomes/Spatial/`:
+
+``` bash
+sbatch -p priority -c 24 --mem 49152 -t 24:0:0 \
+    generate_seeker_reference/generate_seeker_reference_slurm.sh \
+    /reference/fasta/genome.fa \ # Path to the reference FASTA file
+    /reference/gtf/genes-modified.gtf \ # Path to the reference GTF file
+    NA \ # Pass 'NA' as an argument if the mitochondrial gene name is not annotated in the reference used
+    species_name # Name of the output folder
+```
