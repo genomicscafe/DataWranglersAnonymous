@@ -1,0 +1,447 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Data Wranglers Anonymous book repository",
+    "section": "",
+    "text": "Preface\nThis is a collection of tutorials for helping people to get started with a variety of computational resources for sequencing data analysis.\nThe tutorials are meant to be as generic as possible given that each person’s computing resources might greatly differ with each other.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#who-is-this-for",
+    "href": "index.html#who-is-this-for",
+    "title": "Data Wranglers Anonymous book repository",
+    "section": "Who is this for?",
+    "text": "Who is this for?\nThis is intended for people who has little to no experience in bioinformatics and would like to get started with some of the computational resources available at Carnegie Science’s BSE division.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#why",
+    "href": "index.html#why",
+    "title": "Data Wranglers Anonymous book repository",
+    "section": "Why?",
+    "text": "Why?\nThis is an effort to condense the vast amount of resources out there, which can make things confusing and frustrating when it comes to implementation.",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#current-content",
+    "href": "index.html#current-content",
+    "title": "Data Wranglers Anonymous book repository",
+    "section": "Current content",
+    "text": "Current content\nThe current collection has the following topics:\n\nComputing Resources\n\nGetting started with HPC systems\n\nBCL Convert\n\nHow to Run BCL-Convert on HPC\n\nCell Ranger\n\nHow to run Cell Ranger on HPC\nHow to run Cell Ranger Arc on HPC\n\nNextflow\n\nRunning Nextflow on HPC\n\nCurio\n\nHow to run Curio seeker on HPC\n\nR and RStudio\n\nInstalling software in R",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#credit",
+    "href": "index.html#credit",
+    "title": "Data Wranglers Anonymous book repository",
+    "section": "Credit",
+    "text": "Credit\nTutorials are a collective effort of the Genomics Cafe team at Carnegie-Embryology.\n- Members at the creation of this repository:\n    - Javier Carpinteyro Ponce\n    - Frederick Tan\n    - Joseph Tran\n    - Rick Veader\n    - Xiaobin Zheng\n\nBook template credits\nBook design and repository was inspired by and uses portions of the Modern Polars Quarto book by Kevin Heavey, including its _quarto.yml structure and design elements.\nSource repository: kevinheavey/modern-polars",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "index.html#contributing",
+    "href": "index.html#contributing",
+    "title": "Data Wranglers Anonymous book repository",
+    "section": "Contributing",
+    "text": "Contributing\nThis book is free and open source, so please do open an issue if you notice a problem!",
+    "crumbs": [
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "Computing-Resources/getstarted-with-HPC.html",
+    "href": "Computing-Resources/getstarted-with-HPC.html",
+    "title": "1  Getting started with HPC systems",
+    "section": "",
+    "text": "1.1\nThis is a short and [hopefully] simple tutorial for guiding people on how to use a HPC cluster for running their analyses. This is intended to be very generic so it is not covering a particular HPC for a specific institution. Please contact your corresponding HPC system administrator for requesting access to computing resources.",
+    "crumbs": [
+      "Computing Resources",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Getting started with HPC systems</span>"
+    ]
+  },
+  {
+    "objectID": "Computing-Resources/getstarted-with-HPC.html#section",
+    "href": "Computing-Resources/getstarted-with-HPC.html#section",
+    "title": "1  Getting started with HPC systems",
+    "section": "",
+    "text": "AI-generated (Gemini Advanced 2.0). Prompt: Generate an image of a caricaturized HPC computing resources of a research institute in genomics and developmental biology. Make sure image does not include any text.",
+    "crumbs": [
+      "Computing Resources",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Getting started with HPC systems</span>"
+    ]
+  },
+  {
+    "objectID": "Computing-Resources/getstarted-with-HPC.html#what-is-a-hpc-cluster",
+    "href": "Computing-Resources/getstarted-with-HPC.html#what-is-a-hpc-cluster",
+    "title": "1  Getting started with HPC systems",
+    "section": "1.2 What is a HPC cluster?",
+    "text": "1.2 What is a HPC cluster?\nA HPC cluster is the combination of:\n\nMany individual machines, each referred to as “nodes”\nFast shared storage, accessible to all nodes\nAll interconnected over high speed networks and/or specialized interconnects\nWith resource access managed by a scheduler (i.e. slurm)",
+    "crumbs": [
+      "Computing Resources",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Getting started with HPC systems</span>"
+    ]
+  },
+  {
+    "objectID": "Computing-Resources/getstarted-with-HPC.html#get-started-with-your-analyses",
+    "href": "Computing-Resources/getstarted-with-HPC.html#get-started-with-your-analyses",
+    "title": "1  Getting started with HPC systems",
+    "section": "1.3 Get started with your analyses",
+    "text": "1.3 Get started with your analyses\nA typical workflow on an HPC cluster includes:\n\nLog in: Use the command line SSH or web interface to access the cluster\n\nAn example on how to use the command line to log in via SSH to BSE-HPC:\n\n$ ssh user@hpc.institution.edu\n\n\nTransfer Data: Move data from your local computer and/or other sources to the HPC cluster\nFind Software: Access existing software from the cluster, download from a remote source, or compile your own code\n\nAs an example, you can find and load existing software via module :\n# To list the available/installed software\nuser@login1:~$ module avail\n--------------------- /institution/hpcdata/software/rhel9/modules/bio ---------------------------------   \nalphafold/2.3.2             bwa/0.7.17                   guppy/6.0.1           metaxa2/2.2.3            \n\n# To load software, i.e. alphafold\nuser@login1:~$ module load alphafold/2.3.2\n\n# Ready to use alphfold\nuser@login1:~$ alphafold\nUsage: /institution/hpcdata/software/containers/alphafold/alphafold_2.3.2.sh &lt;OPTIONS&gt;\n\nRequired Parameters:\n-o &lt;output_dir&gt;         Path to a directory that will store the results.\n-f &lt;fasta_file&gt;         Path to a FASTA file containing one sequence\n...\n\nPrepare Input: Set up necessary files for calculation\nPrepare Job Script: Create a job script with the commands to run the cluster. Here is an example of a alphafold.sh script\n#!/bin/bash\n#SBATCH --job-name=alphafold\n#SBATCH --output=alphafold_%j.out\n#SBATCH --error=alphafold_%j.err\n#SBATCH --nodes=1\n#SBATCH --cpus-per-task=16 # Adjust based on your system and needs\n#SBATCH --mem=64G       # Adjust memory as needed\n#SBATCH --time=24:00:00  # Adjust runtime as needed\n#SBATCH --gres=gpu:1     # Request a GPU\n\nmodule load alphafold # Or however you load the alphafold environment\n\n# Example command to run AlphaFold\nalphafold run_prediction \\\n  --fasta_paths=target.fasta \\\n  --output_dir=output_dir \\\n  --data_dir=/path/to/alphafold/data \\\n  --preset=model_1_ptm \\\n  --max_template_date=2023-12-31\n\n#Explanation of important parts:\n\n#SBATCH directives:\n#   --job-name: Name of the job.\n#   --output: Output file.\n#   --error: Error file.\n#   --nodes: Number of nodes.\n#   --cpus-per-task: Number of CPU cores per task.\n#   --mem: Memory allocation.\n#   --time: Maximum runtime.\n#   --gres=gpu: Number of GPUs requested.\n\n#module load alphafold: Loads the AlphaFold environment. This will vary depending on your HPC setup.\nSubmit Jobs: Send your batch submission to start the calculation:\nuser@login1:~$ sbatch alphafold.sh\nMonitor Progress: Check the status of your calculations\nuser@login1:~$ squeue\n             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)\n             62847 partition   alphafold  user  R      13:05      1 vgpu-2017-001\n\nJOBID: A unique numerical identifier for each job\nPARTITION: The name of the partition (queue) where the job is submitted\nNAME: The name assigned to the job\nUSER: The username who submitted the job\nST: The current status of the job: PD Pending, R Running, CD Completed, F Failed, S Suspended\nTIME: The amount of time the job has been running\nNODES: the number of noes allocated to the job\nNODELIST(REASON): The names of nodes allocated to the job. If the job is pending, this column may display the reason why it’s waiting(e.g. “Resources”, “Priority”, “Dependency”)\n\nAnalyze Results: Review results when they finish either on the HPC or back on your local computer for analysis and visualization.\n\n\n1.3.1 Happy computing!",
+    "crumbs": [
+      "Computing Resources",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Getting started with HPC systems</span>"
+    ]
+  },
+  {
+    "objectID": "BCL-convert/running-BCLconvert-HPC.html",
+    "href": "BCL-convert/running-BCLconvert-HPC.html",
+    "title": "2  How to Run BCL-Convert on HPC",
+    "section": "",
+    "text": "2.1 Make BCL-convert samplesheet-v2.csv for standard bulk DNA/RNA-seq\nA short tutorial that shows how to get started with BCL Convert version 4.2.7. The examples below show how to run bcl-convert for demultiplexing Illumina’s BCL raw data. This tutorial assumes that BCL Convert is installed in your system and it is fully functional.\nFor standard sequencing runs, like bulk RNA sequencing:",
+    "crumbs": [
+      "BCL Convert",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>How to Run BCL-Convert on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "BCL-convert/running-BCLconvert-HPC.html#make-bcl-convert-samplesheet-v2.csv-for-standard-bulk-dnarna-seq",
+    "href": "BCL-convert/running-BCLconvert-HPC.html#make-bcl-convert-samplesheet-v2.csv-for-standard-bulk-dnarna-seq",
+    "title": "2  How to Run BCL-Convert on HPC",
+    "section": "",
+    "text": "Create the sample sheet file required by BCL-convert.\n\nPopulate the file with the corresponding sample information. The final sample sheet should look like this:\n[Header]\nFileFormatVersion,2\nFlowCellType,P2\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nBarcodeMismatchesIndex1,1\n[BCLConvert_Data]\nSample_ID,index,index2,Sample_Project,Sample_Name\nsample1_ID,ATCACGTT,,Project_1,sample1\nsample2_ID,CGATGTTT,,Project_2,sample2\nBarcodeMismatchesIndex2,1 should be added to the [BCLConvert_Settings] section when using double indexing. Add index2 barcode sequence.",
+    "crumbs": [
+      "BCL Convert",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>How to Run BCL-Convert on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "BCL-convert/running-BCLconvert-HPC.html#make-bcl-convert-samplesheet-v2.csv-for-10x-genomics-single-cell-rna-seq",
+    "href": "BCL-convert/running-BCLconvert-HPC.html#make-bcl-convert-samplesheet-v2.csv-for-10x-genomics-single-cell-rna-seq",
+    "title": "2  How to Run BCL-Convert on HPC",
+    "section": "2.2 Make BCL-convert samplesheet-v2.csv for 10X Genomics single-cell RNA-seq",
+    "text": "2.2 Make BCL-convert samplesheet-v2.csv for 10X Genomics single-cell RNA-seq\n\nPopulate the sample sheet with the sample information. Main spread sheet might contain the index names but you can look for the sequences here: https://cdn.10xgenomics.com/raw/upload/v1655151897/support/in-line%20documents/Dual_Index_Kit_TT_Set_A.csv\n\nNote that index and index2 columns should contain the actual sequences.\n\nThe final sample sheet should look like this:\n[Header]\nFileFormatVersion,2\nFlowCellType,P2\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nBarcodeMismatchesIndex1,1\nBarcodeMismatchesIndex2,1\n[BCLConvert_Data]\nSample_ID,index,index2,Sample_Project,Sample_Name\nsample1_ID,TATCAGCCTA,GTTTCGTCCT,Project_1,sample1\nsample2_ID,GCCCGATGGA,AATCGTCTAG,Project_1,sample2\nNote that Sample_Project remains the same given that both samples come from the same sequencing run.",
+    "crumbs": [
+      "BCL Convert",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>How to Run BCL-Convert on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "BCL-convert/running-BCLconvert-HPC.html#run-bcl-convert",
+    "href": "BCL-convert/running-BCLconvert-HPC.html#run-bcl-convert",
+    "title": "2  How to Run BCL-Convert on HPC",
+    "section": "2.3 Run BCL-convert",
+    "text": "2.3 Run BCL-convert\nAssuming BCL Convert is properly installed in your HPC system, you can follow the following workflow:\n\nCreate a bash script, i.e. doDemux_bclconvert.sh:\n#!/bin/bash\n\nDIR=$1 # First positional argument for the input directory\nSHEET=$2 # Second positional argument for the sample sheet\nOUT=$3 # Third positional argument for the output directory\n\n# Load the bclconvert installation path\nmodule load bclconvert/4.2.7\n\n# bcl-convert command\nbcl-convert --bcl-input-directory $DIR --output-directory $OUT --sample-sheet $SHEET --shared-thread-odirect-output true --sample-name-column-enabled true --bcl-sampleproject-sub\ndirectories true\nRun bcl-convert\n# Run the doDemux_bclconvert.sh wrapper\nsbatch -p priority -c 24 --mem 250000  -t 24:0:0 \\\n    doDemux_bclconvert.sh \\ # full path for the created bash script\n    /data/NextSeq1000/runs/run \\ # full path for the sequencing run output\n    samplesheet.csv \\ # sample sheet located in current directory\n    /path/to/output # full path for output directory\nYou might need to change some out directory permissions\n# Change directory permissions\nchmod +xr -R output/Project/ # example for a 10X run\nVerify a successful BCL-convert run by inspecting the slurm-[jobid].out file. Should look like this:\nIndex Read 2 is marked as Reverse Complement in RunInfo.xml: The barcode and UMI outputs will be output in Reverse Complement of Sample Sheet inputs.\nSample sheet being processed by common lib? Yes\nSampleSheet Settings: \n  BarcodeMismatchesIndex1 = 1\n  BarcodeMismatchesIndex2 = 1\n  CreateFastqForIndexReads = 0\n\nshared-thread-linux-native-asio output is enabled\nWARNING: shared-thread-linux-native-asio output could have low performance or hang if output directory is on a distributed file system\nbcl-convert Version 00.000.000.4.2.7\nCopyright (c) 2014-2022 Illumina, Inc.\nCommand Line: --bcl-input-directory /data/NextSeq1000/runs/run --output-directory output --sample-sheet samplesheet.csv --shared-thread-odirect-output true --sample-name-column-enabled true --bcl-sampleproject-subdirectories true \nConversion Begins.\n# CPU hw threads available: 24\nParallel Tiles: 4. Threads Per Tile: 6\nSW compressors: 24\nSW decompressors: 12\nSW FASTQ compression level: 1\nConversion Complete.",
+    "crumbs": [
+      "BCL Convert",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>How to Run BCL-Convert on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "BCL-convert/running-BCLconvert-HPC.html#generate-multiqc-report",
+    "href": "BCL-convert/running-BCLconvert-HPC.html#generate-multiqc-report",
+    "title": "2  How to Run BCL-Convert on HPC",
+    "section": "2.4 Generate MultiQC report",
+    "text": "2.4 Generate MultiQC report\nMultiQC can be used to generate a sequencing report. MultiQC only requires the main output directory of BCL-convert.\nHere is an implementation of MultiQC using Singularity containers\n\nA wrapper script for MultiQC, i.e. multiqc.sh:\n#!/usr/bin/bash\n\nDIR=$1\n\nsingularity exec --bind $DIR:/run /apps/linux/5.4/multiqc/lib/multiqc-1.22.3.sif multiqc --outdir /run/MultiQC/ /run\nRun the script on your system\n# Run MultiQC\n/apps/linux/5.4/multiqc/bin/multiqc.sh /path/to/bcl-convert/output",
+    "crumbs": [
+      "BCL Convert",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>How to Run BCL-Convert on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRanger-HPC.html",
+    "href": "Cell-Ranger/running-CellRanger-HPC.html",
+    "title": "3  How to run Cell Ranger on HPC",
+    "section": "",
+    "text": "3.1 Demultiplex sequence data with BCL-convert\nA short tutorial that shows how to get started with 10x Genomics Cell Ranger version 8.0.1. The examples below show how to run cellranger count for primary analysis of single-cell/nuclei RNA sequencing data. This tutorial assumes that Cell Ranger has been installed in your system and it is fully functional.",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>How to run Cell Ranger on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRanger-HPC.html#demultiplex-sequence-data-with-bcl-convert",
+    "href": "Cell-Ranger/running-CellRanger-HPC.html#demultiplex-sequence-data-with-bcl-convert",
+    "title": "3  How to run Cell Ranger on HPC",
+    "section": "",
+    "text": "Refer to this tutorial for details on how to run BCL-convert on HPC:\n\nHow to Run BCL-convert on HPC",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>How to run Cell Ranger on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRanger-HPC.html#run-cellranger-count",
+    "href": "Cell-Ranger/running-CellRanger-HPC.html#run-cellranger-count",
+    "title": "3  How to run Cell Ranger on HPC",
+    "section": "3.2 Run cellranger count",
+    "text": "3.2 Run cellranger count\n\nCreate a wrapper script, i.e. doScRNA.8.0.1.sh\n#!/bin/bash\n\nmodule load cellranger/8.0.1\n\nTEMPLATE=/data/10x/processing/slurm.template\n\nSAMPLE=$1 # First positional argument to specify the sample to be processed\nFASTQS=$2 # Second positional argument to enter the full path to the FastQ files generated by BCL Convert\nTRANSCRIPTOME=$3 # Reference transcriptome for a specific species/organism\n\ncellranger count --jobmode=$TEMPLATE --id $SAMPLE\\_count --fastqs $FASTQS --sample $SAMPLE --transcriptome $TRANSCRIPTOME --create-bam true\nThis is an example of the slurm.template you could use for your system (provided by 10x Genomics). You might need to consult your system administrator for specific settings.\n#!/usr/bin/env bash\n#\n# Copyright (c) 2016 10x Genomics, Inc. All rights reserved.\n#\n# =============================================================================\n# Setup Instructions\n# =============================================================================\n#\n# 1. Add any other necessary Slurm arguments such as partition (-p) or account\n#    (-A). If your system requires a walltime (-t), 24 hours (24:00:00) is\n#    sufficient.  We recommend you do not remove any arguments below or Martian\n#    may not run properly.\n#\n# 2. Change filename of slurm.template.example to slurm.template.\n#\n# =============================================================================\n# Template\n# =============================================================================\n#\n#SBATCH -J __MRO_JOB_NAME__\n#SBATCH --export=ALL\n#SBATCH --nodes=1 --ntasks-per-node=__MRO_THREADS__\n#SBATCH --signal=2\n#SBATCH --no-requeue\n### Alternatively: --ntasks=1 --cpus-per-task=__MRO_THREADS__\n###   Consult with your cluster administrators to find the combination that\n###   works best for single-node, multi-threaded applications on your system.\n#SBATCH --mem=__MRO_MEM_GB__G\n#SBATCH -o __MRO_STDOUT__\n#SBATCH -e __MRO_STDERR__\n\n#SBATCH -p priority\n#SBATCH -t 72:0:0\n\n__MRO_CMD__\nRun the cellranger count wrapper:\nnohup bash doScRNA.8.0.1.sh \\\n    SAMPLE \\\n    /path/to/FastQs/ \\\n    /path/to/reference/transcriptome/ \\\n    &gt; /path/to/stdout/file.out &\nSome more details about the positional arguments\n\nSAMPLE sample that is being processed\n/path/to/FastQs is the directory containing the raw sequencing data. Note that this directory might contain multiple SAMPLEs depending on how the demultiplexing step has been processed.\n/path/to/reference/transcriptome/ is the directory to the reference genome/transcriptome, which has been created by cellranger mkref . See below for further instructions.",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>How to run Cell Ranger on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRanger-HPC.html#inspect-the-main-visual-report",
+    "href": "Cell-Ranger/running-CellRanger-HPC.html#inspect-the-main-visual-report",
+    "title": "3  How to run Cell Ranger on HPC",
+    "section": "3.3 Inspect the main visual report",
+    "text": "3.3 Inspect the main visual report\nIf everything went well, cellranger count should have created the web_summary.html file located in the [SAMPLE]_count/outs/ directory.\nMain info to look for and report:\n\nEstimated number of cells\nNumber of clusters\nFraction Reads in Cells",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>How to run Cell Ranger on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRanger-HPC.html#create-a-custom-reference-for-cell-ranger",
+    "href": "Cell-Ranger/running-CellRanger-HPC.html#create-a-custom-reference-for-cell-ranger",
+    "title": "3  How to run Cell Ranger on HPC",
+    "section": "3.4 Create a custom reference for Cell Ranger",
+    "text": "3.4 Create a custom reference for Cell Ranger\nTo create a custom reference genome for cellranger count, we need to run cellranger mkref where the input files are:\n\nFiles needed:\n\nReference annotation in gtf format\nReference genome assembly in fasta format\n\nCreate cellranger mkref wrapper script, i.e. `doMkref.8.0.1.sh`:\n#!/usr/bin/env bash\n#\n#\n# =============================================================================\n# Job Script\n# Auth: 10x Genomics; Javier Carpinteyro-Ponce\n# =============================================================================\n#\n#SBATCH -J CR_mkref\n#SBATCH --export=ALL\n#SBATCH --nodes=1 --ntasks-per-node=24\n#SBATCH --signal=2\n#SBATCH --no-requeue\n### Alternatively: --ntasks=1 --cpus-per-task={NUM_THREADS}\n###   Consult with your cluster administrators to find the combination that\n###   works best for single-node, multi-threaded applications on your system.\n#SBATCH --mem=400G\n#SBATCH -o mkref_%j.err\n#SBATCH -e mkref_%j.log\n\nmodule load cellranger/8.0.1\n\n# Check if the number of arguments is a multiple of 3\nif (( $# % 3 != 0 )); then\n  echo -e \"Error: You need to provide at least 3 arguments in the following order:\\n \\\n  1) species name (or desired outdir name)\\n \\\n  2) genome assembly (/full/path/genome.fa)\\n \\\n  3) genes in gtf format (/full/path/genes.gtf)\\n\\n \\\n  If 2 species/genomes, arguments need to be in the following order:\\n \\\n  1) species 1 name (only species name given that this and species 2 name will be concatenated to create final output dir name) \\n \\\n  2) genome assembly species 1 (/full/path/sp1genome.fa)\\n \\\n  3) genes in gtf format for species 1 (/full/path/sp1genes.gtf)\\n \\\n  4) species 2 name (only species name)\\n \\\n  5) genome assembly species 2 (/full/path/sp2genome.fa)\\n \\\n  6) genes in gtf format for species 2 (/full/path/sp2genes.gtf)\"\n  exit 1\nfi\n\ncase $# in\n  3)\n    # Code to execute when there are 3 arguments\n    echo \"Running cellranger mkref for a single species genome:\"\n    echo \"Outdir name: $1\"\n    echo \"Genome assembly: $2\"\n    echo \"Genes: $3\"\n    cellranger mkref --genome=$1 --fasta=$2 --genes=$3 --memgb=40 --localmem=400 --localcores=80\n    ;;\n  6)\n    # Code to execute when there are 6 arguments\n    echo \"Running cellranger mkref for 2 species genomes:\"\n    echo \"Outdir name: \"$1\"_and_\"$4\n    echo \"Genome assembly species 1: $2\"\n    echo \"Genes species 1: $3\"\n    echo \"Genome assembly species 2: $5\"\n    echo \"Genes species 2: $6\"\n    cellranger mkref --genome=$1 --fasta=$2 --genes=$3 --genome=$4 --fasta=$5 --genes=$6 --memgb=400 --localmem=400 --localcores=8\n    ;;\n  *)\n    echo -e \"Error: You need to provide at least 3 arguments in the following order:\\n \\\n    1) species name (or desired outdir name)\\n \\\n    2) genome assembly (/full/path/genome.fa)\\n \\\n    3) genes in gtf format (/full/path/genes.gtf)\\n\\n \\\n    If 2 species/genomes, arguments need to be in the following order:\\n \\\n    1) species 1 name (only species name given that this and species 2 name will be concatenated to create final output dir name) \\n \\\n    2) genome assembly species 1 (/full/path/sp1genome.fa)\\n \\\n    3) genes in gtf format for species 1 (/full/path/sp1genes.gtf)\\n \\\n    4) species 2 name (only species name)\\n \\\n    5) genome assembly species 2 (/full/path/sp2genome.fa)\\n \\\n    6) genes in gtf format for species 2 (/full/path/sp2genes.gtf)\"\n    exit 1\n    ;;\nesac\nThe script above has been designed to create a reference with either 1 or 2 genomes/transcriptomes. The 2 genomes/transcriptomes case can be useful when processing samples where host-symbiont are of interest.\nRun the cellranger mkref wrapper\nsbatch -p partition -t 24:0:0 \\\n    doMkref.8.0.1.sh \\\n    species_name \\\n    /full/path/genome.fasta \\\n    /full/path/annotation.gtf\nspecies_name is the custom name you can use to name the output reference main directory\n\n\n3.4.1 Run cellranger mkref for two species\nSame doMkref.8.0.1.sh can also take 6 arguments, which correspond to the information for 2 different species. For example when creating a reference for Aiptasia and a symbiont algae:\nsbatch -p partition -t 24:0:0 \\\n    doMkref.8.0.1.sh \\ \n    species1 \\ # species 1 name\n    /full/path/species1_genome.fasta \\ # species 1 genome\n    /full/path/species1_annotation.gtf \\ # species 1 annotation\n    species2 \\ # species 2 name\n    /full/path/species2_genome.fasta \\ # species 2 genome\n    /full/path/species2_annotation.gtf # species 2 annotation\n\n\n\n\n\n\nLarge and very fragmented genomes!\n\n\n\nFor large and very fragmented genomes (i.e. very high number of contigs/scaffolds) STAR may cause issues. Given this was the case for the aipSp1 and Smic combined reference, STAR error log suggested to add the --limitSjdbInsertNsj 1184844 argument. Then to implement this on the cellranger installation, the cellranger-x.y.z/lib/python/cellranger/reference_builder.py (starting at line 438) needed to be modified:\nargs = [            \n    os.path.join(_LIB_BIN, \"STAR\"),            \n    \"--runMode\",            \n    \"genomeGenerate\",            \n    \"--limitSjdbInsertNsj 1184844\",             \n    \"--genomeDir\",            \n    self.reference_star_path,            \n    \"--runThreadN\",            \n    str(num_threads),            \n    \"--genomeFastaFiles\",            \n    in_fasta_fn,            \n    \"--sjdbGTFfile\",            \n    in_gtf_fn,        \n  ]",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>How to run Cell Ranger on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRangerArc-HPC.html",
+    "href": "Cell-Ranger/running-CellRangerArc-HPC.html",
+    "title": "4  How to run Cell Ranger Arc on HPC",
+    "section": "",
+    "text": "4.1 Demultiplex sequence data with BCL-convert\nA short tutorial that shows how to get started with 10x Genomics Cell Ranger Arc version 2.0.2. The examples below show how to run cellranger-arc count for primary analysis of multiomic (ATAC + GEX) single-cell/nuclei sequencing data. This tutorial assumes that Cell Ranger Arc has been installed in your system and it is fully functional.\nSample sheet for demultiplexing is slightly different from a standard single-cell experiment:",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>How to run Cell Ranger Arc on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRangerArc-HPC.html#demultiplex-sequence-data-with-bcl-convert",
+    "href": "Cell-Ranger/running-CellRangerArc-HPC.html#demultiplex-sequence-data-with-bcl-convert",
+    "title": "4  How to run Cell Ranger Arc on HPC",
+    "section": "",
+    "text": "4.1.1 Create sample sheet\n\nDemultiplex ATAC-seq and GEX sequencing runs: Populate the file with the sample/experiment information. Sample sheet for demultiplexing ATAC-seq data would include the “TrimUMI,0”, and “OverrideCycles,Y50;I8;U24;Y49” for the [BCLConvert_Settings] section, as specified here. Note that these configuration settings correspond to sequencing runs for libraries created with the Single Index Kit N Set A. Those settings are not needed when the Dual Index kit TT Set A is used for library preparation.\n\nFinal sample sheet for the single index libraries should look like this. Barcode index sequences are showed also as example:\n[Header]\nFileFormatVersion,2\n\n[BCLConvert_Settings]\nCreateFastqForIndexReads,1\nTrimUMI,0\nOverrideCycles,Y50;I8;U24;Y49\n\n[BCLConvert_Data]\nSample_ID,index,Sample_Project,Sample_Name\nSAMPLE1,AAACGGCG,AAGH72CM5,SAMPLE1\nSAMPLE1,CCTACCAT,AAGH72CM5,SAMPLE1\nSAMPLE1,GGCGTTTC,AAGH72CM5,SAMPLE1\nSAMPLE1,TTGTAAGA,AAGH72CM5,SAMPLE1\nSAMPLE2,AGCCCTTT,AAGH72CM5,SAMPLE2\nSAMPLE2,CAAGTCCA,AAGH72CM5,SAMPLE2\nSAMPLE2,GTGAGAAG,AAGH72CM5,SAMPLE2\nSAMPLE2,TCTTAGGC,AAGH72CM5,SAMPLE2\nFinal sample sheet for the double index libraries should look like this:\n[Header]\nFileFormatVersion,2\nFlowCellType,P2\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nBarcodeMismatchesIndex1,1\nBarcodeMismatchesIndex2,1\n[BCLConvert_Data]\nSample_ID,index,index2,Sample_Project,Sample_Name\nSAMPLE1_ID,TATCAGCCTA,GTTTCGTCCT,PROJECT,SAMPLE1\nSAMPLE2_ID,GCCCGATGGA,AATCGTCTAG,PROJECT,SAMPLE2\n\n\n\n\n4.1.2 Run BCL-Convert and generate MultiQC report\nOne sample sheets have been created, you should run bcl-convert and multiqc separately for the ATAC and GEX portions. The process is the same as the one show in:\n\nHow to Run BCL-Convert on HPC",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>How to run Cell Ranger Arc on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRangerArc-HPC.html#run-cell-ranger-arc-count",
+    "href": "Cell-Ranger/running-CellRangerArc-HPC.html#run-cell-ranger-arc-count",
+    "title": "4  How to run Cell Ranger Arc on HPC",
+    "section": "4.2 Run Cell Ranger Arc count",
+    "text": "4.2 Run Cell Ranger Arc count\n\n4.2.1 Create libraries CSV file\nCell Ranger Arc count needs, as main input, a libraries CSV file that specifies the location of the ATAC and GEX FASTQ files associated with the sample. It is a 3-column CSV file with the following column names: fastqs, sample, library_type. fastqs column will specify the full path to the directory containing the demultiplexed FASTQ files for the sample. sample column specifies the sample name assigned as the Sample_ID. library_type specifies the library type with only two possible options: Chromatin Accessibility if sample is ATAC-seq data or Gene Expression for a Multiome GEX library. Final library file should look like this:\nfastqs,sample,library_type\n/path/to/FastQs/,SAMPLE1,Chromatin Accessibility\n/path/to/FastQs/,SAMPLE1,Gene Expression\n\n\n4.2.2 Run Cell Ranger Arc\n\nCreate the cellranger-arc count wrapper, i.e. doScRNA-arc.2.0.2.sh:\n#!/bin/bash\n\nmodule load cellranger-arc/2.0.2\n\nTEMPLATE=/data/10x/processing/slurm.template\n\nSAMPLE=$1\nREFERENCE=$2\nLIBRARIES=$3\n#PROJECT=$4\n\ncellranger-arc count --jobmode=$TEMPLATE --id=$SAMPLE\\_count --reference=$REFERENCE --libraries=$LIBRARIES\nThis is an example of the slurm.template you could use for your system (provided by 10x Genomics). You might need to consult your system administrator for specific settings.\n#!/usr/bin/env bash\n#\n# Copyright (c) 2016 10x Genomics, Inc. All rights reserved.\n#\n# =============================================================================\n# Setup Instructions\n# =============================================================================\n#\n# 1. Add any other necessary Slurm arguments such as partition (-p) or account\n#    (-A). If your system requires a walltime (-t), 24 hours (24:00:00) is\n#    sufficient.  We recommend you do not remove any arguments below or Martian\n#    may not run properly.\n#\n# 2. Change filename of slurm.template.example to slurm.template.\n#\n# =============================================================================\n# Template\n# =============================================================================\n#\n#SBATCH -J __MRO_JOB_NAME__\n#SBATCH --export=ALL\n#SBATCH --nodes=1 --ntasks-per-node=__MRO_THREADS__\n#SBATCH --signal=2\n#SBATCH --no-requeue\n### Alternatively: --ntasks=1 --cpus-per-task=__MRO_THREADS__\n###   Consult with your cluster administrators to find the combination that\n###   works best for single-node, multi-threaded applications on your system.\n#SBATCH --mem=__MRO_MEM_GB__G\n#SBATCH -o __MRO_STDOUT__\n#SBATCH -e __MRO_STDERR__\n\n#SBATCH -p priority\n#SBATCH -t 72:0:0\n\n__MRO_CMD__\nRun the cellranger-arc count wrapper\nnohup doScRNA-arc.2.0.2.sh \\\n    SAMPLE \\\n    /path/to/reference/ \\\n    /path/to/libraries.csv \n    &gt; nohup.SAMPLE-1.out &\n\nArguments of the doScRNA-arc.2.0.2.sh wrapper need to be entered strictly in the same order as below:\n\nSAMPLE: Sample name\n/path/to/reference/: Full path to the reference genome\n/path/to/libraries.csv: libraries CSV file\n&gt; &gt; nohup.SAMPLE-1.out &: &gt; redirect stdout to the &gt; nohup.SAMPLE-1.out file\n\n\nInspect the main visual report.\n\nIf everything went well, cellranger-arc count should have created the web_summary.html file located in the [Sample_ID]_count/outs/ directory.\n\nMain info to look for in the report:\n\nEstimated number of cells\nATAC Median high-quality fragments per cell\nGEX Median genes per cell\n\nFor more details, take a look at the main 10x Genomics documentation: https://www.10xgenomics.com/support/software/cell-ranger-arc/latest/analysis/outputs/web-summary",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>How to run Cell Ranger Arc on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Cell-Ranger/running-CellRangerArc-HPC.html#cell-ranger-arc-aggr",
+    "href": "Cell-Ranger/running-CellRangerArc-HPC.html#cell-ranger-arc-aggr",
+    "title": "4  How to run Cell Ranger Arc on HPC",
+    "section": "4.3 Cell Ranger Arc aggr",
+    "text": "4.3 Cell Ranger Arc aggr\nCell Ranger Arc aggr is designed to pool the results of multiple GEM wells by cellranger-arc count. It produces a single feature-barcode matrix containing all the data. The barcode sequences for each channel are distinguished by a GEM well suffix appended to the barcode sequence. More info here.\n\n4.3.1 Create Aggregation CSV file\nTo run the cellranger-arc aggr pipeline, an aggregation csv file is needed. This is a 4-column csv file containing the following information: library_id, atac_fragments, per_barcode_metrics, gex_molecule_info.\n\nlibrary_id: Unique identifier for this input GEM well. i.e. JMT1\natac_fragments: Path to the atac_fragments.tsv.gz file produced by cellranger-arc count. i.e. /data/10x/qc/JMT1-12_count/outs/atac_fragments.tsv.gz.\nper_barcode_metrics: Path to the per_barcode_metrics.csv file produced by cellranger-arc count. i.e. /data/10x/qc/JMT1-12_count/outs/per_barcode_metrics.csv.\ngex_molecule_info: Path to the gex_molecule_info.h5 file produced by cellranger-arc count. i.e. /data/10x/qc/JMT1-12_count/outs/gex_molecule_info.h5.\n[Optional]: Additional custom columns containing library meta-data (e.g. lab or sample origin). These custom library annotation do not affect the analysis pipeline but can be visualized downstream in the Loupe Browser.\n\nThe final aggregation CSV file should look like this:\nlibrary_id,atac_fragments,per_barcode_metrics,gex_molecule_info,origin\nSAMPLE1,/path/to/SAMPLE1_count/outs/atac_fragments.tsv.gz,/path/to/SAMPLE1_count/outs/per_barcode_metrics.csv,/path/to/SAMPLE1_count/outs/gex_molecule_info.h5,mouse1\nSAMPLE2,/path/to/SAMPLE2_count/outs/atac_fragments.tsv.gz,/path/to/SAMPLE2_count/outs/per_barcode_metrics.csv,/path/to/SAMPLE2_count/outs/gex_molecule_info.h5,mouse2\nSAMPLE3,/path/to/SAMPLE3_count/outs/atac_fragments.tsv.gz,/path/to/SAMPLE3_count/outs/per_barcode_metrics.csv,/path/to/SAMPLE3_count/outs/gex_molecule_info.h5,mouse3\n\n\n4.3.2 Run Cell Ranger Arc aggr\n\nCreate the cellranger-arc aggr wrapper script, i.e. doScRNA-arc-aggr.2.0.2.sh\n#!/bin/bash\n\nmodule load cellranger-arc/2.0.2\n\nTEMPLATE=/data/10x/processing/slurm.template\n\nID=$1 # RUN ID\nCSV=$2 # Path to aggrlib.csv file\nREFERENCE=$3 # Path to reference genome/transcriptome\n\ncellranger-arc aggr --jobmode=$TEMPLATE --id=$ID\\_aggr --csv=$CSV --reference=$REFERENCE\nThe script above uses the same slurm.template\nRun the cellranger-arc aggr wrapper.\n# example for JMT1-7\n\nnohup doScRNA-arc-aggr.2.0.2.sh \\\n    RUN_ID \\\n    /path/to/aggrlib.csv \\\n    /path/to/reference/genome/transcriptome/ \\\n    &gt; nohup.RUN_IDaggr.out &\nArguments of the doScRNA-arc-aggr.2.0.2.sh wrapper need to be entered strictly in the same order as below:\n\nRUN_ID: Custom run ID and output folder name\n/path/to/aggrlib.csv: Path to the aggregation csv file\n/path/to/reference/genome/transcriptome/: Path to folder containing the reference genome/annotations.\n\nA successful run will conclude with a message like this in the nohup.RUN_IDaggr.out file:\n2021-04-26 05:16:01 [runtime] (update)          ID.AGG123.SC_ATAC_GEX_AGGREGATOR_CS.ATAC_GEX_CLOUPE_PREPROCESS.fork0 join_running\n2021-04-26 05:20:28 [runtime] (join_complete)   ID.AGG123.SC_ATAC_GEX_AGGREGATOR_CS.ATAC_GEX_CLOUPE_PREPROCESS\n\nOutputs:\n- Barcoded and aligned fragment file:           /home/jdoe/runs/AGG123/outs/atac_fragments.tsv.gz\n- Fragment file index:                          /home/jdoe/runs/AGG123/outs/atac_fragments.tsv.gz.tbi\n- Bed file of all called peak locations:        /home/jdoe/runs/AGG123/outs/atac_peaks.bed\n- Filtered peak barcode matrix in hdf5 format:  /home/jdoe/runs/AGG123/outs/raw_feature_bc_matrix.h5\n- Filtered peak barcode matrix in mex format:   /home/jdoe/runs/AGG123/outs/raw_feature_bc_matrix\n- Filtered peak barcode matrix in hdf5 format:  /home/jdoe/runs/AGG123/outs/filtered_feature_bc_matrix.h5\n- Filtered peak barcode matrix in mex format:   /home/jdoe/runs/AGG123/outs/filtered_feature_bc_matrix\n- Secondary analysis outputs:\n    clustering:\n      atac: {\n        ...\n      }\n      gex:  {\n        ...\n      }\n    dimensionality_reduction:\n      atac: {\n        ...\n      }\n      gex:  {\n        ...\n      }\n    feature_linkage:\n      ...\n    tf_analysis:\n      ...\n- Loupe Browser input file:                     /home/jdoe/runs/AGG123/outs/cloupe.cloupe\n- csv summarizing important metrics and values: /home/jdoe/runs/AGG123/outs/summary.csv\n- Annotation of peaks with genes:               /home/jdoe/runs/AGG123/outs/atac_peak_annotation.tsv\n- HTML summary:                                 /home/jdoe/runs/AGG123/outs/web_summary.html\n- Input data supplied for aggregation:          [\n    {\n        \"atac_fragments\": \"/home/jdoe/runs/LV123/outs/atac_fragments.tsv.gz\",\n        \"gex_molecule_info\": \"/home/jdoe/runs/LV123/outs/gex_molecule_info.h5\",\n        \"library_id\": \"LV123\",\n        \"metadata\": {},\n        \"per_barcode_metrics\": \"/home/jdoe/runs/LV123/outs/per_barcode_metrics.csv\"\n    },\n    {\n        \"atac_fragments\": \"/home/jdoe/runs/LB456/outs/atac_fragments.tsv.gz\",\n        \"gex_molecule_info\": \"/home/jdoe/runs/LB456/outs/gex_molecule_info.h5\",\n        \"library_id\": \"LB456\",\n        \"metadata\": {},\n        \"per_barcode_metrics\": \"/home/jdoe/runs/LB456/outs/per_barcode_metrics.csv\"\n    },\n    {\n        \"atac_fragments\": \"/home/jdoe/runs/LP789/outs/atac_fragments.tsv.gz\",\n        \"gex_molecule_info\": \"/home/jdoe/runs/LP789/outs/gex_molecule_info.h5\",\n        \"library_id\": \"LP789\",\n        \"metadata\": {},\n        \"per_barcode_metrics\": \"/home/jdoe/runs/LP789/outs/per_barcode_metrics.csv\"\n    }\n  ]\n- Input data supplied for aggregation as CSV:   /home/jdoe/runs/AGG123/outs/aggr.csv\n\nPipestance completed successfully!\n\n\n\n4.3.3 Inspect main cellranger-arc aggr results\nFrom 10x Genomics documentation: Once cellranger-arc aggr has successfully completed, you can browse the resulting summary HTML file in any supported web browser, open the .cloupe file in Loupe Browser, or refer to the Understanding Output section to explore the data by hand. For machine-readable versions of the summary metrics, refer to the cellranger-arc aggr section of the Summary Metrics page.",
+    "crumbs": [
+      "Cell Ranger",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>How to run Cell Ranger Arc on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Nextflow/running-Nextflow-HPC.html",
+    "href": "Nextflow/running-Nextflow-HPC.html",
+    "title": "5  Running Nextflow on HPC",
+    "section": "",
+    "text": "5.1 What is Nextflow?\nNextflow is a “workflow orchestration engine” and a domain-specific language (DSL) designed for the creation of scalable and reproducible computational workflows. Nextflow core features are:\nIn the following links you can find and example of an output report built by MultiQC as part of the nf-core/rnaseq pipeline: https://nf-co.re/rnaseq/3.14.0/results/rnaseq/results-b89fac32650aacc86fcda9ee77e00612a1d77066/aligner_star_rsem/multiqc/star_rsem/?file=multiqc_report.html\nFull description of the output files of the nf-core/pipeline can be found here.\nMore info about Nextflow here.\nSimple RNA-seq workflow tutorial here.",
+    "crumbs": [
+      "Nextflow",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Running Nextflow on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Nextflow/running-Nextflow-HPC.html#what-is-nextflow",
+    "href": "Nextflow/running-Nextflow-HPC.html#what-is-nextflow",
+    "title": "5  Running Nextflow on HPC",
+    "section": "",
+    "text": "Workflow portability and reproducibility - You can run the same analysis on either our local HPC, the Caltech HPC, and even on a commercial cloud.\nScalability of parallelization and deployment - You can analyse from 1 sample to 100+ without requiring significant extra work.\nIntegration of existing tools, systems, and industry standards - You can use community development pipelines i.e. from https://nf-co.re/pipelines for applications in RNA-seq, CUT&RUN, and bacterial assembly.\n\n\n\n\n\n\n\n\nFrom https://training.nextflow.io/basic_training",
+    "crumbs": [
+      "Nextflow",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Running Nextflow on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Nextflow/running-Nextflow-HPC.html#how-to-run-nextflow",
+    "href": "Nextflow/running-Nextflow-HPC.html#how-to-run-nextflow",
+    "title": "5  Running Nextflow on HPC",
+    "section": "5.2 How to run Nextflow?",
+    "text": "5.2 How to run Nextflow?\nLike any programming language, you can start writing your own workflows using a text editor. For example, this Nextflow tutorial shows how to get started with your first Nextflow script. This script with the .nf extension can be executed using Nextflow, i.e.:\n# use 'nextlow run'\nnextflow run tutorial.nf\n\nN E X T F L O W  ~  version 23.10.0\nexecutor &gt;  local (3)\n[69/c8ea4a] process &gt; splitLetters   [100%] 1 of 1 ✔\n[84/c8b7f1] process &gt; convertToUpper [100%] 2 of 2 ✔\nHELLO\nWORLD!",
+    "crumbs": [
+      "Nextflow",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Running Nextflow on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Nextflow/running-Nextflow-HPC.html#how-to-run-nextflow-in-your-local-hpc",
+    "href": "Nextflow/running-Nextflow-HPC.html#how-to-run-nextflow-in-your-local-hpc",
+    "title": "5  Running Nextflow on HPC",
+    "section": "5.3 How to run Nextflow in your local HPC?",
+    "text": "5.3 How to run Nextflow in your local HPC?\nNextflow can run in most linux computing environments, and depending on the amount of data you would need to make sure you have enough computing resources. If you are new to HPC please take a look at the Getting started with HPC systems tutorial.\nFirst login to your HPC using your credentials, i.e.:\n# use ssh to login\nssh user@hpc.ciwemb.edu\nNextflow is usually installed on HPC systems via modules. To make Nextflow available for execution, the installation needs to be loades via module load. In addition, the java installation also needs to be loaded as it is the main dependency for nextflow:\n# load java and nextflow\nmodule load java/17.0.6-amzn\nmodule load nextflow/23.10.0\nAs multiple version of Nextflow are installed, you need to determine the version that works for your analyses. If a version you need is not installed, please contact the Genomics Cafe team.\nNow that nextflow is available, you can go ahead and run Nextflow, i.e.: nextflow run script.nf. In this tutorial, however, we are covering how to run the rnaseq pipeline build by the nf-core community. The nf-core/rnaseq workflow can be used to analyse RNA-seq data coming from organisms with a reference genome and annotation. More info about the pipeline here.",
+    "crumbs": [
+      "Nextflow",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Running Nextflow on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Nextflow/running-Nextflow-HPC.html#what-is-nf-core",
+    "href": "Nextflow/running-Nextflow-HPC.html#what-is-nf-core",
+    "title": "5  Running Nextflow on HPC",
+    "section": "5.4 What is nf-core?",
+    "text": "5.4 What is nf-core?\nnf-core is a community-driven initiative focused on developing curated workflows for biological data using Nextflow. It offers a valuable resource for researchers, providing a standardized, reliable, and efficient way to conduct bioinformatics pipelines. More info here.\n\n\n\nFrom nf-core/rnaseq\n\n\nImage above is a “tube map”-style pipeline diagram for the nf-core/rnaseq workflow. This is a typical graphical representation of the nf-core pipelines. Note the resemblance to the London Underground map. If interested on how to create this type of tube diagrams using Inkscape, take a look at this tutorial from the nf-core community: https://nf-co.re/events/2022/bytesize-inkscape",
+    "crumbs": [
+      "Nextflow",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Running Nextflow on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Nextflow/running-Nextflow-HPC.html#how-to-get-started-with-the-nf-corernaseq-pipeline",
+    "href": "Nextflow/running-Nextflow-HPC.html#how-to-get-started-with-the-nf-corernaseq-pipeline",
+    "title": "5  Running Nextflow on HPC",
+    "section": "5.5 How to get started with the nf-core/rnaseq pipeline?",
+    "text": "5.5 How to get started with the nf-core/rnaseq pipeline?\nTo run the nf-core/rnaseq pipeline you need the following input files:\n\nReference genome assembly (i.e. assembly.fa)\nGenome annotation (i.e. annotation.gtf)\nRNA-seq data\nSample sheet\nThe Nextflow config file (i.e. nextflow.config)\n\n\n5.5.1 The sample sheet\nFor the nf-core/rnaseq pipeline, you need to create a sample sheet with the information about the samples you would like to analyze before running the pipeline. The sample sheet is usually a csv (comma separated values) file with the following basic structure:\nsample,fastq_1,fastq_2,strandedness\n1aGal,1aGal_R1.fastq.gz,1aGal_R2.fastq.gz,auto\nWhere sample is the sample name. fastq_1 and fastq_2 are the sequence files (leave fastq_2 blank for single-end sequencing), it is a good practice to use the full path to tell the location of those files. strandedness is use to specify the sequence strand (leave auto to infer strandedness automatically).\nAll pipelines built by the nf-core community would require a sample sheet and the information contained on it depends on the specific pipeline used. For example, you can take a look at the sample sheet configuration for the nf-core/rnaseq pipeline here.\n\n\n5.5.2 The config file\nThe nextflow.config file is a configuration file that will tell Nextflow how to manage the workflow executions. This file needs to be located in the same directory you are running nextflow. The config file we use for nextflow run on hpc.ciwemb.edu would typically look like this:\nsingularity.cacheDir = '/path/to/singularity/images/rnaseq/3.14.0'\nsingularity.enabled = true\nprocess.executor = 'slurm' \nprocess.queue = 'shared' # this depends on your HPC system\nThe singularity.cacheDir parameter is where you specify the path of the directory where the singularity images are located/saved for all the dependencies of the pipeline. The singularity.enabled parameter allow us to tell Nextflow that we want to use Singularity for dependency executions. With the process.executor parameter we tell Nextflow we are using Slurm as our job scheduler (as we are using an slurm-based HPC). With process.queue we specify which partition of our HPC want to use (all regular users must use the shared partition).",
+    "crumbs": [
+      "Nextflow",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Running Nextflow on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "Nextflow/running-Nextflow-HPC.html#run-the-nf-corernaseq-pipeline",
+    "href": "Nextflow/running-Nextflow-HPC.html#run-the-nf-corernaseq-pipeline",
+    "title": "5  Running Nextflow on HPC",
+    "section": "5.6 Run the nf-core/rnaseq pipeline",
+    "text": "5.6 Run the nf-core/rnaseq pipeline\nNow that we have all input files and nextflow and java loaded in our environment, it is time to run Nextflow:\n\nCreate a new working directory\n\n# use mkdir to create a new directory\nmkdir test_rnaseq\n# use cd to change directory\ncd test_rnaseq\n\nCreate your sample sheet and save it into the working directory (i.e. samplesheet.csv):\n\nsample,fastq_1,fastq_2,strandedness\nSAMPLE1,SAMPLE1_R1_001.fastq.gz,SAMPLE1_R2_001.fastq.gz,auto\nSAMPLE2,SAMPLE2_R1_001.fastq.gz,SAMPLE2_R2_001.fastq.gz,auto\n\nCreate and save the nextflow.config file:\n\nsingularity.cacheDir = '/path/to/singularity/images/rnaseq/3.14.0'\nsingularity.enabled = true\nprocess.executor = 'slurm'\nprocess.queue = 'shared'\n\nRun the pipeline making sure you use the appropriate version of the nf-core/rnaseq pipeline. And make sure you are using the right reference genome and annotation files:\n\n# load java\nmodule load java/17.0.6-amzn\n# load nextflow\nmodule load nextflow/23.10.0\n# open a persistent terminal using the screen command\nscreen\n# run nf-core/rnaseq 3.14.0\nnextflow run nf-core/rnaseq -r 3.14.0 --pseudo_aligner salmon -resume --input samplesheet.csv --outdir results --fasta /path/to/reference/genome.fa --gtf /path/to/reference/genome.gtf\n\n# To leave the persistent terminal without stoping nextflow:\n# Press Ctrl+A (release), then press D\n# Now you will be back to the main command line\nNote that for the main command line, we still use the basic nextflow run command, but now we specified that we want to run the version 3.14.0 of the nf-core/rnaseq. Everything after the version number are arguments and parameters for the nf-core/rnaseq pipeline.\nFor detail information about the nf-core/rnaseq parameters please refer to the main documentation: https://nf-co.re/rnaseq/3.14.0/\n\n5.6.1 Inspect the output\nAfter a successful nf-core/rnaseq run with Nextflow, you can now inspect the main visual report that is generated using MultiQC.",
+    "crumbs": [
+      "Nextflow",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Running Nextflow on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "CurioSeeker/running-seeker-HPC.html",
+    "href": "CurioSeeker/running-seeker-HPC.html",
+    "title": "6  How to run Curio seeker on HPC",
+    "section": "",
+    "text": "6.1 Demultiplex sequence data with BCL-convert\nA short tutorial that shows how to get started with the Curio Seeker pipeline version 3.0.0. The examples below show how to run curioseeker for primary analysis of spatial transcriptomics. This tutorial assumes that Curio Seeker has been deployed in your system and it is fully functional.",
+    "crumbs": [
+      "Curio",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>How to run Curio seeker on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "CurioSeeker/running-seeker-HPC.html#demultiplex-sequence-data-with-bcl-convert",
+    "href": "CurioSeeker/running-seeker-HPC.html#demultiplex-sequence-data-with-bcl-convert",
+    "title": "6  How to run Curio seeker on HPC",
+    "section": "",
+    "text": "Refer to this tutorial for details on how to run BCL-convert on HPC:\n\nHow to Run BCL-convert on HPC",
+    "crumbs": [
+      "Curio",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>How to run Curio seeker on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "CurioSeeker/running-seeker-HPC.html#running-seeker-on-hpc",
+    "href": "CurioSeeker/running-seeker-HPC.html#running-seeker-on-hpc",
+    "title": "6  How to run Curio seeker on HPC",
+    "section": "6.2 Running seeker on HPC",
+    "text": "6.2 Running seeker on HPC\nMain input arguments:\n\nsamplesheet.csv: This is made based on the experiment information and whether a pre-built or custom reference genome is used. Full path required. This file will also contain the full path for the bead barcodes file\nFull path for the main project directory where the .nextflow.log file will be saved\nFull path for the main output directory, i.e. results/\nFull path for the work/ directory\nFull path for the slurm.config file\nrawdata/ directory containing the sequence files\n\nCreate the main project directory, i.e. Spatial/\n# go to data/Spatial/\ncd Spatial/\n\n# create new project directory\nmkdir SAMPLE\n\n6.2.1 With a curioseeker pre-built reference\nWhen running the seeker pipeline using one the provided pre-built references, the full path where the pre-built references are saved is required for the --igenomes_base argument. In addition, the samplesheet.csv file needs to contain the genome column where the Reference ID needs to be provided.\nThe samplesheet.csv should look like this:\nsample,experiment_date,barcode_file,fastq_1,fastq_2,genome\nSAMPLE,2024-10-26,A0075_016_BeadBarcodes.txt,reads_R1_001.fastq.gz,reads_R2_001.fastq.gz,RefGenome\n\nsample: custom sample name _zf stands for Zebrafish\nexperiment_date: experiment data\nbarcode_file: full path to the bead barcodes file\nfastq_1 & fastq_2: full path for sequence files\ngenome: Reference ID for the reference genome\n\nRun the curio seeker pipeline:\n# load java\nmodule load java/17.0.6-amzn\n\n# load nextflow 23.04.3\nmodule load nextflow/23.04.3\n\n# open a screen session\nscreen\n\n# run the seeker pipeline\nnextflow -log Spatial/SAMPLE/.nextflow.log run /data/linux_3.10/curioseeker/3.0.0/main.nf \\\n  --input Spatial/SAMPLE/sampleesheet.csv \\\n  --outdir Spatial/SAMPLE/results/ \\\n  -work-dir Spatial/SAMPLE/work/ \\\n  --igenomes_base genomes/Spatial/ \\\n  -resume \\\n  -profile slurm \\\n  -config Spatial/SAMPLE/slurm.config\n  \n# Detach screen session to keep using the regular command line\n## press ctrl+a [release and then press] d\n\n# Re-attach to the screen session\n## list current active sessions\nscreen -ls \n## select session ID and re-attach\nscreen -r &lt;session ID or name&gt;\n\n\n6.2.2 With a custom reference\nWhen running the seeker pipeline using a custom-built reference genome, the --igenomes_base is omitted and the reference genome information is directly added to the samplesheet.csv file.\nThe samplesheet.csv file should look like this:\nsample,experiment_date,barcode_file,fastq_1,fastq_2,genome,star_index,gtf\nSAMPLE,2024-10-11,A0075_007_BeadBarcodes.txt,reads_R1_001.fastq.gz,reads_R2_001.fastq.gz,RefGenome,/path/to/reference/STARIndex/,/path/to/reference/Genes/genes.gtf\n\ngenome this column contains the name of the directory where the custom reference was created\nstar_index in this column, the full path to the STARindex directory needs to be specified\ngtf this column needs to specify the full path to the genes.gtf file created by the custom reference seeker wrapper (see below for detail on creating a custom reference)\n\nRun the curio seeker pipeline:\nThe commands below show how to run the pipeline on an HPC system:\n# load java\nmodule load java/17.0.6-amzn\n\n# load nextflow 23.04.3\nmodule load nextflow/23.04.3\n\n# open a screen session\nscreen\n# run the seeker pipeline\nnextflow -log Spatial/SAMPLE/.nextflow.log run/data/linux_3.10/curioseeker/3.0.0/main.nf \\\n    --input Spatial/SAMPLE/sampleesheet.csv \\\n    --outdir Spatial/SAMPLE/results/ \\\n    -work-dir Spatial/SAMPLE/work/ \\\n    -resume \\\n    -profile slurm \\\n    -config Spatial/SAMPLE/slurm.config\n    \n\n# Detach screen session to keep using the regular command line\n## press ctrl+a [release and then press] d\n\n# Re-attach to the screen session\n## list current active sessions\nscreen -ls \n## select session ID and re-attach\nscreen -r &lt;session ID or name&gt;",
+    "crumbs": [
+      "Curio",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>How to run Curio seeker on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "CurioSeeker/running-seeker-HPC.html#inspect-curio-seeker-main-report-and-output-directory",
+    "href": "CurioSeeker/running-seeker-HPC.html#inspect-curio-seeker-main-report-and-output-directory",
+    "title": "6  How to run Curio seeker on HPC",
+    "section": "6.3 Inspect curio-seeker main report and output directory",
+    "text": "6.3 Inspect curio-seeker main report and output directory\nFor a successful run, the seeker pipeline will generate a main output directory located in Spatial/[projectID]/results/OUTPUT/[SampleID]/.\nLocated in the main OUTPUT/[SampleID]/ directory, the main output files are described in the following picture (taken from the curiobioscience knowledgebase):",
+    "crumbs": [
+      "Curio",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>How to run Curio seeker on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "CurioSeeker/running-seeker-HPC.html#create-a-custom-reference-for-curio-seeker-v3.0.0",
+    "href": "CurioSeeker/running-seeker-HPC.html#create-a-custom-reference-for-curio-seeker-v3.0.0",
+    "title": "6  How to run Curio seeker on HPC",
+    "section": "6.4 Create a custom reference for curio seeker v3.0.0",
+    "text": "6.4 Create a custom reference for curio seeker v3.0.0\nThe necessary scripts are already downloaded and ready to run but the first two steps are listed for reference only.\n\nCreate directory, i.e. genomes/Spatial\nmkdir -p genomes/Spatial/\ncd genomes/Spatial/\nDownload the script\nwget https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/CurioSeeker_v2.0.0/generate_seeker_reference_v2.0.0.tar.gz -O - | tar -xzf -\ncd generate_seeker_reference\nGiven that seeker uses STAR 2.6.1d . Then modify the generate_seeker_reference.sh script so it can run on HPC.\nThe modified script, generate_seeker_reference_slurm.sh, contain these two additional lines:\n#!/usr/bin/bash\n\nmodule load STAR/2.6.1d\n\n\n6.4.1 Run the generate_seeker_reference_slurm.sh script\nTo generate the custom reference, two files are needed:\n\nGenome assembly in fasta format\nGenome annotation in gtf format\n\nThen run the wrapper on genomes/Spatial/:\nsbatch -p priority -c 24 --mem 49152 -t 24:0:0 \\\n    generate_seeker_reference/generate_seeker_reference_slurm.sh \\\n    /reference/fasta/genome.fa \\ # Path to the reference FASTA file\n    /reference/gtf/genes-modified.gtf \\ # Path to the reference GTF file\n    NA \\ # Pass 'NA' as an argument if the mitochondrial gene name is not annotated in the reference used\n    species_name # Name of the output folder",
+    "crumbs": [
+      "Curio",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>How to run Curio seeker on HPC</span>"
+    ]
+  },
+  {
+    "objectID": "R_RStudio/R-package-installation.html",
+    "href": "R_RStudio/R-package-installation.html",
+    "title": "7  Installing software in R",
+    "section": "",
+    "text": "7.1 Where do we find installed packages in R?\nA short tutorial that shows how to find and install packages in R.\nA typical installation of RStudio involves also the installation of R, which includes some default packages. These packages can be loaded into the current environment using the function library(). For example:\nIn some cases, there are some packages that might have been installed in non-standard locations with the purpose of better version control and space usage. But, how do we get access to those packages? If interested in using a specific package in R that has been installed in a non-standard location, you can use the .libPaths() function to load the path of the directory containing the installation of a specific package. For example:",
+    "crumbs": [
+      "R and RStudio",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installing software in R</span>"
+    ]
+  },
+  {
+    "objectID": "R_RStudio/R-package-installation.html#where-do-we-find-installed-packages-in-r",
+    "href": "R_RStudio/R-package-installation.html#where-do-we-find-installed-packages-in-r",
+    "title": "7  Installing software in R",
+    "section": "",
+    "text": "# load the mtcars package\nlibrary(\"mtcars\")\n\n# Tell R where the DESeq2 package is installed in /data/apps/R/4.3.2\n.libPaths(\"/data/apps/R/4.3.2/DESeq2\")\n# Load the DESeq2 package using library()\nlibrary(DESeq2)\n# DESeq2 functions ready to use",
+    "crumbs": [
+      "R and RStudio",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installing software in R</span>"
+    ]
+  },
+  {
+    "objectID": "R_RStudio/R-package-installation.html#but-what-is-.libpaths",
+    "href": "R_RStudio/R-package-installation.html#but-what-is-.libpaths",
+    "title": "7  Installing software in R",
+    "section": "7.2 But what is .libPaths()?",
+    "text": "7.2 But what is .libPaths()?\n.libpaths() is a function for setting the library search path (directory), which is where R looks for installed packages. R will have a default location in your system for installing packages where .libpaths() will look for them. In the following example, /home/user/R/x86_64-pc-linux-gnu-library/4.3 is the default directory where R will look for packages:\n# if you run .libpaths() with no arguments it gives you the current directory where R will look for installed packages:\n.libPaths()\n[1] \"/home/jcarpinteyro/R/x86_64-pc-linux-gnu-library/4.3\" \"/opt/R/4.3.2/lib/R/library\"",
+    "crumbs": [
+      "R and RStudio",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installing software in R</span>"
+    ]
+  },
+  {
+    "objectID": "R_RStudio/R-package-installation.html#what-if-i-want-to-install-a-new-package-in-r",
+    "href": "R_RStudio/R-package-installation.html#what-if-i-want-to-install-a-new-package-in-r",
+    "title": "7  Installing software in R",
+    "section": "7.3 What if I want to install a new package in R?",
+    "text": "7.3 What if I want to install a new package in R?\nIf the package of interest has not been installed yet, you can install it by yourself using the functions in How to install software/packages in R?\nBy default, all the packages each user install by themselves will be installed in the R default directory. For example:\n# New packages will be installed in \"/home/user/R/x86_64-pc-linux-gnu-library/4.3\" when using install.packages()\n.libPaths()\n[1] \"/home/user/R/x86_64-pc-linux-gnu-library/4.3\" \"/opt/R/4.3.2/lib/R/library\"\n# Install the dplyr package using install.packages()\ninstall.packages(\"dplyr\")\nYou may have heard about install.packages() so let’s take a peek behind the curtain on what it does!\nUsing the command line (UNIX or Linux) you could go to /home/user/R/x86_64-pc-linux-gnu-library/4.3 and you will see a new directory that contains all the necessary files to run the functions of the dplyr package:\nuser@sandbox:~$ cd R/x86_64-pc-linux-gnu-library/4.3/\nuser@sandbox:~/R/x86_64-pc-linux-gnu-library/4.3$ ls\nabind    BiocGenerics  bitops        dplyr          futile.options    GenomicRanges  locfit          Rcpp           S4Arrays   SparseArray           zlibbioc\nBH       BiocParallel  DelayedArray  formatR        GenomeInfoDb      IRanges        MatrixGenerics  RcppArmadillo  S4Vectors  SummarizedExperiment\nBiobase  BiocVersion   DESeq2        futile.logger  GenomeInfoDbData  lambda.r       matrixStats     RCurl          snow       XVector",
+    "crumbs": [
+      "R and RStudio",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installing software in R</span>"
+    ]
+  },
+  {
+    "objectID": "R_RStudio/R-package-installation.html#install",
+    "href": "R_RStudio/R-package-installation.html#install",
+    "title": "7  Installing software in R",
+    "section": "7.4 How to install packages in R?",
+    "text": "7.4 How to install packages in R?\nIn R we have several ways to install software packages and the most common way is to do so is using the function install.packages() . This function will try to download and locally install packages available at CRAN (The Comprehensive R Archive Network), which is a general purpose repository of packages. A usage example of the install.packages() could look as:\n# Install tidyverse from CRAN\ninstall.packages(\"tidyverse\")\n# Load tidyverse\nlibrary(\"tidyverse\")\nDepending on the scientific field you might require to install and use more specialized packages. For example, Bioconductor is an open-development software project for the analysis of genomic data. Bioconductor can be considered a repository of packages and, in order to install packages from this repository, we could use the function BiocManager::install(). A typical use of this function can look as:\n# Use the install function from BiocManager to install DESeq2\nBiocManager::install(\"DESeq2\")\nlibrary(\"DESeq2\")",
+    "crumbs": [
+      "R and RStudio",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Installing software in R</span>"
+    ]
+  }
+]
