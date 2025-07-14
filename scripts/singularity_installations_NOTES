@@ -1,0 +1,35 @@
+# To initialize the myrast singularity image
+LC_ALL=C singularity run ../../myrast.sif
+
+# downloading genomes from NCBI [worked]
+perl 1.NCBI_and_RAST.pl NCBIGenomes.txt javiCP89 J5FrUM9EbVSGDF9
+
+# uploading genomes situated in your computer to RAST [worked]
+cat UploadGenomesRast.txt| while read line; do id=$(echo $line|cut -d' ' -f1); name=$(echo $line|cut -d' ' -f2-5); echo svr_submit_RAST_job -user javiCP89  -passwd J5FrUM9EbVSGDF9 -fasta $id -domain Bacteria -bioname "${name}" -genetic_code 11 -gene_caller rast; svr_submit_RAST_job -user  javiCP89 -passwd J5FrUM9EbVSGDF9  -fasta $id -domain Bacteria -bioname "$name" -genetic_code 11 -gene_caller rast; done
+
+# Download Genomes from RAST [worked]
+cut -f1 DownloadGenomeRast.txt | while read line; do svr_retrieve_RAST_job karina1986 kgg121286 $line amino_acid > $line.faa; done
+
+
+
+## To install orthocore:
+
+# Build sandbox image from the docker repository
+singularity build --sandbox orthocore docker://nselem/orthocores:latest
+# Run singularity image as:
+LC_ALL=C singularity shell --bind $(pwd):/usr/src/CORE ../orthocore/ /bin/bash
+cd /usr/src/CORE
+scan.pl -rast_ids RAST.id -my_blast 35OrgIslaHits.blast -set_name scaneando -mode g
+
+chmod -R o+w orthocore/
+
+## What it seemed to work
+# Create a singularity def file
+# def file created in /home/jcarpinteyro/software/test-installs/nselem-orthoCORE/singularity/orthocore.def
+# then create the singularity image sif file
+sudo singularity build orthocore.sif orthocore.def
+# then run the singularity container as 
+LC_ALL=C singularity run /apps/linux/5.4/orthocore/24-04-10/src/orthocore.sif
+# Install the singularity image using module
+# Run test as:
+scan.pl -rast_ids RAST.id -my_blast 35OrgIslaHits.blast -set_name scaneando -mode g
